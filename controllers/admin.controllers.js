@@ -31,7 +31,7 @@ const postAdmin = async (req, res) => {
     res.cookie("adminToken", token, cookieOptions);
 
     res.render("admin/dashboard.ejs", {
-      count: userCount,
+      userCount,
       active: 1,
     });
   } else {

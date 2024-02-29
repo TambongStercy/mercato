@@ -98,9 +98,10 @@ const getSingleProduct = async (req, res) => {
 };
 
 const getLogin = async (req, res) => {
-  const userID = req.cookies?.userId; // Using optional chaining
+  const token = req.cookies.authToken;
 
-  if (!userID) {
+  const user = await User.findOne({ token: token });
+  if (!user) {
     res.render("login.ejs", { currentPage: "/Login" });
   } else {
     res.redirect("user-page", { currentPage: "/Login" });
@@ -225,16 +226,13 @@ const postSignup = async (req, res) => {
 };
 
 const getUserPage = async (req, res) => {
-  const userID = req.cookies?.userId; // Using optional chaining
-  console.log(userID);
-  const user = await User.findById(userID);
+  const token = req.cookies.authToken;
+  
+  const user = await User.findOne({token:  token});
+
   const created = user.formattedCreatedAt();
-  console.log(created);
-  if (!userID) {
-    res.render("login.ejs", { currentPage: "/Login" });
-  } else {
-    res.render("user-page", { user, created, currentPage: "/Login" });
-  }
+
+  res.render("user-page", { user, created, currentPage: "/Login" });
 };
 
 const getAddress = async (req, res) => {
@@ -347,7 +345,7 @@ const postCaisse = async (req, res) => {
       const prdtCount = IdAndCount.count;
       const product = await Product.findById(prdtId);
 
-      if(!product){
+      if (!product) {
         continue
       }
 
@@ -427,8 +425,8 @@ const flwWebhook = async (req, res) => {
       console.log("success webhook payment");
 
       const order = await Order.findById(orderId);
-      if(!order){
-        return res.status(400).json({message: 'No order with this ID'})
+      if (!order) {
+        return res.status(400).json({ message: 'No order with this ID' })
       }
       order.paied = true;
       await order.save();
