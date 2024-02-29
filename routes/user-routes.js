@@ -35,7 +35,7 @@ const {
   getPaymentComplete,
 } = require("../controllers/user.controllers.js");
 
-router.get("/", getHome);
+router.get("/", verifyAuth, getHome);
 router.get("/homme", verifyAuth, getHomme);
 router.get("/femme", verifyAuth, getFemme);
 router.get("/accessoires", verifyAuth, getAccessoires);
