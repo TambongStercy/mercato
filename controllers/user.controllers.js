@@ -283,8 +283,8 @@ const postAddress = async (req, res) => {
     const tx_ref = order.id;
     const total = order.totalAmount;
 
-    const scretKey = process.env.FLW_TEST_SECRET_KEY; //TEST API KEY
-    // const scretKey = process.env.FLW_SECRET_KEY;//REAL API KEY
+    // const scretKey = process.env.FLW_TEST_SECRET_KEY; //TEST API KEY
+    const scretKey = process.env.FLW_SECRET_KEY;//REAL API KEY
 
     const options = {
       headers: { Authorization: `Bearer ${scretKey}` },
@@ -416,8 +416,8 @@ const flwWebhook = async (req, res) => {
     // }
 
     const payload = req.body;
-    const status = payload.data.status;
     const orderId = payload.data.tx_ref;
+    const status = payload.data.status;
 
     console.log(payload.data);
     console.log(payload.data.status);
