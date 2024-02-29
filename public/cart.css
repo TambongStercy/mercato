@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f3f3;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .cart-item {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .item-image {
+    flex: 1;
+    max-width: 100px;
+    margin-right: 10px;
+  }
+  .item-image img{
+    width: 75%;
+
+  }
+
+  .item-details {
+    flex: 2;
+  }
+
+  .item-details h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .item-details p {
+    margin: 5px 0;
+    color: #777;
+  }
+
+  .item-actions {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .item-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e44d26;
+  }
+
+  .item-size {
+    font-size: 14px;
+  }
+
+  .item-quantity {
+    width: 40px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+
+  .remove-btn {
+    background-color: black;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-left: 3%;
+  }
+  .remove-btn i{
+    font-size: 22px;
+    color: #f8f8ff;
+  }
+
+  .checkout-btn {
+    background-color: black;
+    color: #fff;
+    padding: 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    align-self: flex-end; 
+    margin-bottom: 35%;
+    transition: background .4s ease;
+  }
+  #checkout-icon{
+    width: 15px;
+  }
+
+  .total-cost {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    color: #333;
+  }
+  

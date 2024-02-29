@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercato | Ecommerce</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/shop.css">
+    <link rel="stylesheet" href="/article-info.css">
+</head>
+
+<body>
+    <!-- Version pc -->
+    <div id="pc">
+        <img src="/assets/logo-no-background.png" alt="">
+        <h1 style="text-align: center;">DISPONIBLE UNIQUEMENT EN VERSION MOBILE</h1>
+    </div>
+
+    <!-- Fin de la version PC -->
+
+    <!-- Version mobile -->
+
+    <!-- Mobile top bar -->
+    <header>
+        <section id="Top-bar">
+            <div id="top-bar">
+                <div class="menu">
+                    <a href="/<%= product.type %>"><i class="ri-arrow-left-line"></i></a>
+                </div>
+                <img src="/assets/logo-no-background.png" alt="Mercato Logo" class="top-bar-logo">
+                <div class="search">
+                    <a href="/cart"><i class="ri-shopping-cart-2-line"></i></a>
+                    <!-- <i class="ri-search-2-line"></i> -->
+                </div>
+            </div>
+        </section>
+        <!-- End of the top bar -->
+    </header>
+    <div id="article-info">
+        <div class="gallery-container">
+            <div class="gallery-image">
+                <img src="<%= product.imagePath %>" alt="Image 1">
+                <div class="image-number"></div>
+            </div>
+            <!-- Add more images as needed -->
+        </div>
+
+        <h5>
+            <%= product.sellingPrice %> FCFA
+        </h5>
+
+        <h5 class="price">
+            <%=product.name %>
+        </h5>
+
+        <div class="colors">
+            <ul>
+                <li>
+                    <h5>Couleurs</h5>
+                </li>
+                <a href="#" class="color-selection one">
+                    <li class="color-one"></li>
+                </a>
+                <a href="" class="color-selection two">
+                    <li class="color-two"></li>
+                </a>
+                <a href="" class="color-selection three">
+                    <li class="color-three"></li>
+                </a>
+                <a href="" class="color-selection four">
+                    <li class="color-four"></li>
+                </a>
+            </ul>
+        </div>
+
+        <div class="size">
+            <h5>Tailles</h5>
+
+            <% for(const size of product.size.split(',')){ %>
+                <a href="#" class="btn"> <span class="taille">
+                        <%= size %>
+                    </span></a>
+                <% }%>
+                    <div class="delivery">
+                        <h5>Livraison au cameroun</h5>
+                        <p class="livraison"><i class="ri-truck-line"><span class="politique-livraison"> Politique de
+                                    livraison</span></i></p>
+                        <div class="politique">
+                            <ul class="info">
+                                <li>Livraison sous 24h</li>
+                                <li>Livraison dans les 10 regions</li>
+                                <li>Retours gratuit</li>
+                            </ul>
+                        </div>
+                        <br>
+                        <p class="livraison"><i class="ri-swap-2-line"></i><span class="politique-livraison"> Politique
+                                de retour</span></i></p>
+                        <div class="politique">
+                            <ul class="info">
+                                <li>Donner une raison de retour</li>
+                                <li>Retour sous 36 heures</li>
+                                <li>L'article doit etre un etat</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="comments">
+                        <h4>Ajoutez un avis</h4>
+                        <div class="rating">
+                            <input value="5" name="rating" id="star5" type="radio">
+                            <label for="star5"></label>
+                            <input value="4" name="rating" id="star4" type="radio">
+                            <label for="star4"></label>
+                            <input value="3" name="rating" id="star3" type="radio">
+                            <label for="star3"></label>
+                            <input value="2" name="rating" id="star2" type="radio">
+                            <label for="star2"></label>
+                            <input value="1" name="rating" id="star1" type="radio">
+                            <label for="star1"></label>
+                        </div>
+                        <div class="form">
+                            <input class="input" placeholder="Entrez votre commentaire" required="" type="text">
+                            <span class="input-border"></span>
+                        </div>
+
+                    </div>
+        </div>
+
+        <footer>
+            <div id="cart">
+                <h4><a id="button" onclick="addToCart()">Ajoutez au panier | <i class="ri-shopping-cart-2-fill"></i></a>
+                </h4>
+            </div>
+        </footer>
+        <script>
+        const aray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+		// const count = aray?aray.length:0;
+		// const small = document.querySelector(".shopping-cart small");
+		// small.textContent = count;
+		
+		async function addToCart (elem) {
+            const button = document.getElementById('button');
+            button.textContent = 'Dans le panier';
+            const id = ('<%-product.id%>');
+
+
+			let cartArray = [];
+			// If javascript shopping cart session is not empty
+			if (sessionStorage.getItem('shopping-cart')) {
+				cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+			}
+			cartArray.push(id);
+
+			var cartJSON = JSON.stringify(cartArray);
+			sessionStorage.setItem('shopping-cart', cartJSON);
+
+			// chang number of items in cart
+			const {length} = cartArray;
+			console.log(length);
+		}
+        </script>
+        <script src="/main.js"></script>
+</body>
+
+</html>

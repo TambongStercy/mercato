@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/admin/styles.css" />
+  <link rel="stylesheet" href="/admin/style.css">
+  <style>
+    /* Styles for the popup container */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      /* Semi-transparent black background */
+    }
+
+    /* Styles for the popup content */
+    .popup-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    /* Style for the close button */
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin: 20px 50px;
+    }
+
+    .btn {
+      border: #545454 solid 1px;
+      color: #fff;
+      background-color: #c10000;
+      padding: 5px 7px;
+      border-radius: 5px;
+    }
+
+    .btn:hover {
+      border: #fff solid 1px;
+      color: #fff;
+      background-color: #ff1414;
+    }
+  </style>
+  <title>MERCATO | Admin</title>
+</head>
+
+<body id="body">
+  <div class="container">
+    <nav class="navbar">
+      <div class="nav_icon" onclick="toggleSidebar()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </div>
+      <div class="navbar__left">
+        <a class="active_link" href="/admin/">Dashboard</a>
+      </div>
+      <div class="navbar__right">
+        <a href="#">
+          <i class="fa fa-clock-o" aria-hidden="true"></i>
+        </a>
+        <a href="#">
+          <img width="30" src="/assets/avatar.svg" alt="" />
+          <!-- <i class="fa fa-user-circle-o" aria-hidden="true"></i> -->
+        </a>
+      </div>
+    </nav>
+
+    <main>
+      <div class="main__container">
+        <!-- MAIN TITLE STARTS HERE -->
+
+        <div class="main__title">
+          <img src="/assets/hello.svg" alt="" />
+          <div class="main__greeting">
+            <h1>Hello admin_name</h1> <!--Put the name of the admin that connected foolish-->
+            <p>Welcome. Ajouter un article</p>
+          </div>
+        </div>
+
+        <!-- MAIN TITLE ENDS HERE -->
+        <div class="popup" id="popup">
+          <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p class="message">This Item will be deleted permanently!</p>
+            <a id="delete" href="/admin/delete" hidden></a>
+            <button onclick="closePopup()" class="btn">OK</button>
+          </div>
+        </div>
+
+        <!-- MAIN ADD ITEM STARTS HERE -->
+        <div class="main__cards">
+          <div class="main__container">
+            <div class="container">
+
+              <table class="inventory">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>cost-price</th>
+                    <th>Selling price</th>
+                    <th>Quantity Sold</th>
+                    <th>En Stock</th><!--Here you do quantity added + plus initial quantity - Amount sold-->
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% products.forEach((product)=> { %>
+                    <tr>
+                      <td><img src="<%= product.imagePath %>" alt="Product Image"></td>
+                      <td>
+                        <%= product.name %>
+                      </td>
+                      <td>
+                        <%= product.costPrice %>
+                      </td>
+                      <td>
+                        <%= product.sellingPrice %>
+                      </td>
+                      <!-- <td>></td> -->
+                      <td>
+                        <%= product.stock %>
+                      </td>
+                      <td>
+                        <button class="stock-btn" data-type="reduce">-</button>
+                        <span class="stock-quantity">100</span>
+                        <button class="stock-btn" data-type="increase">+</button>
+                      </td>
+                      <td><button class="remove-btn" onclick="showPopup('<%= product._id %>')"><i
+                            class="ri-delete-bin-line"></i></button></td>
+                    </tr>
+                    <% }); %>
+                      <!-- More rows can be added here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- MAIN ADD ITEMS ENDS HERE -->
+
+    </main>
+
+    <script>
+      function showPopup(id) {
+        const popup = document.getElementById('popup');
+        popup.style.display = 'block';
+
+        function cb() {
+          closePopup(id);
+        }
+
+        popup.querySelector('.btn').onclick = cb;
+      }
+
+
+      function closePopup(id) {
+        if (id) {
+          // Get the <a> element by its ID
+          const deleteLink = document.getElementById('delete');
+
+          // Change the href attribute
+          deleteLink.href = '/admin/delete?id='+id;
+
+          // Trigger a click event on the <a> element
+          deleteLink.click();
+        }
+
+        const popup = document.getElementById('popup');
+        popup.style.display = 'none';
+      }
+
+    </script>
+
+    <div id="sidebar">
+      <div class="sidebar__title">
+        <div class="sidebar__img">
+          <img src="/assets/logo-no-background-white.png" alt="logo" />
+          <h1>Mercato</h1>
+        </div>
+        <i onclick="closeSidebar()" class="fa fa-times" id="sidebarIcon" aria-hidden="true"></i>
+      </div>
+
+      <div class="sidebar__menu">
+        <div class="sidebar__link ">
+          <i class="fa fa-home"></i>
+          <a href="/admin/dashboard">Dashboard</a>
+        </div>
+        <h2>MNG</h2>
+        <div class="sidebar__link">
+          <i class="fa fa-user-secret" aria-hidden="true"></i>
+          <a href="/admin/addproduct">Ajouter un article</a>
+        </div>
+        <div class="sidebar__link active_menu_link">
+          <i class="fa fa-archive"></i>
+          <a href="/admin/products">Warehouse</a>
+        </div>
+        <div class="sidebar__link">
+          <i class="fa fa-handshake-o"></i>
+          <a href="/admin/clients">Clients</a>
+        </div>
+        <h2>Promo</h2>
+        <div class="sidebar__link">
+          <i class="ri-discount-percent-fill"></i>
+          <a href="Coupon.html">Coupons</a>
+        </div>
+        <div class="sidebar__logout">
+          <i class="fa fa-power-off"></i>
+          <a href="/admin/logout">Log out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="/script.js"></script>
+</body>
+
+</html>

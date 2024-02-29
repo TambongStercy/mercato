@@ -1,0 +1,143 @@
+#top-selection{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3%;
+    width: 100%;
+}
+#top-selection a{
+    color: #F8F8FF;
+    text-decoration: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+#top-selection button{
+    border: none;
+}
+#top-selection h5{
+    font-size: 25px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    margin-top: 10%;
+    color: white;
+
+}
+.cat-man-one{
+    background :url('assets/img/haut-homme.jpg');
+    background-size: 200%;
+    background-position: 45%;
+    background-repeat: no-repeat;
+    margin-top: 3%;
+    width: 45%;
+    height: 90px;
+    border-radius: 30px;
+    box-shadow: 0px 2px 8px rgba(29, 37, 56, 0.2);
+}
+.cat-man-two{
+    background :url('assets/img/pantalons.jpg');
+    background-size: 200%;
+    background-position: 45%;
+    background-repeat: no-repeat;
+    margin-top: 3%;
+    width: 45%;
+    height: 90px;
+    border-radius: 30px;
+    box-shadow: 0px 2px 8px rgba(29, 37, 56, 0.2);
+}
+
+.cat-man-three{
+    background :url('assets/img/shoe_woman.jpg');
+    background-size: 200%;
+    background-position: 45%;
+    background-repeat: no-repeat;
+    margin-top: 3%;
+    width: 45%;
+    height: 90px;
+    border-radius: 30px;
+    box-shadow: 0px 2px 8px rgba(29, 37, 56, 0.2);
+}
+.cat-man-three-man{
+    background :url('assets/img/shoe_man.jpg');
+    background-size: 200%;
+    background-position: 45%;
+    background-repeat: no-repeat;
+    margin-top: 3%;
+    width: 90%;
+    height: 90px;
+    border-radius: 30px;
+    box-shadow: 0px 2px 8px rgba(29, 37, 56, 0.2);
+}
+
+.cat-man-four{
+    background :url('assets/img/sac_femme.jpg');
+    background-size: 200%;
+    background-position: 45%;
+    background-repeat: no-repeat;
+    margin-top: 3%;
+    width: 45%;
+    height: 90px;
+    border-radius: 30px;
+    box-shadow: 0px 2px 8px rgba(29, 37, 56, 0.2);
+}
+
+/* articles page */
+#article{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 3%;
+    margin-bottom: 15%;
+}
+.article-heading h5{
+    text-align: center;
+    margin-top: 3%;
+    color: black;
+    font-size: 34px;
+}
+#Produits{
+    display: flex;
+    flex-direction: column;
+}
+#article img{
+    border-radius: 8px;
+}
+.card {
+    box-shadow: 0px 2px 8px rgba(29, 37, 56, 0.2);
+    max-width: 40%;
+    margin-top: 3%;
+    text-align: center;
+    border-radius: 15px;
+  }
+  
+  .price {
+    color: grey;
+    font-size: 22px;
+  }
+  
+  .card h1{
+    color: black;
+    font-size: 15px;
+    margin-top: 3%;
+  }
+  .card button {
+    border: none;
+    outline: 0;
+    padding: 12px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    
+    border-radius: 30px;
+  }
+  
+  .card button:hover {
+    opacity: 0.7;
+  }

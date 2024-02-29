@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercato | Ecommerce</title>
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/shop.css">
+</head>
+<body>
+    <!-- Version pc -->
+    <div id="pc">
+        <img src="/assets/logo-no-background.png" alt="">
+        <h1 style="text-align: center;">DISPONIBLE UNIQUEMENT EN VERSION MOBILE</h1>
+    </div>
+    
+    <!-- Fin de la version PC -->
+
+    <!-- Version mobile -->
+
+<!-- Mobile top bar -->
+<header>
+    <section id="Top-bar">
+        <div id="top-bar">
+            <div class="menu">
+                <a href="notifications.html"><i class="ri-menu-2-line"></i></a>
+            </div>
+            <img src="/assets/logo-no-background.png" alt="Mercato Logo" class="top-bar-logo">
+            <div class="search">
+                <i class="ri-search-2-line"></i>
+            </div>
+        </div>
+    </section>
+
+    <section id="homme-categories">
+        <div id="top-selection">
+            <div class="cat-man-one">
+                <h5><a href="#">Femme</a></h5>
+            </div>
+            <div class="cat-man-two">
+                <h5><a href="#">Homme</a></h5>
+            </div>
+        </div>
+    </section>
+<!-- End of the top bar -->
+</header>
+
+<main>
+    <section id="Produits">
+        <div class="article-heading">
+            <h5>Nouveautes</h5>
+        </div>
+        <div id="article">
+            <div class="card">
+                <img src="/assets/img/article-prototype.jpg" alt="Denim Jeans" style="width:100%">
+                <h1>Tailored Jeans</h1>
+                <p class="price">5000 Frs</p>
+                <p><a href="/shop-pages/homme/single-article-page.html"><button>Acheter | <i class="ri-shopping-cart-line"></i></button></a></p>
+              </div>
+
+              <div class="card">
+                <img src="/assets/img/article-prototype.jpg" alt="Denim Jeans" style="width:100%">
+                <h1>Tailored Jeans</h1>
+                <p class="price">5000 Frs</p>
+                <p><button>Acheter | <i class="ri-shopping-cart-line"></i></button></p>
+              </div>
+
+              <div class="card">
+                <img src="/assets/img/article-prototype.jpg" alt="Denim Jeans" style="width:100%">
+                <h1>Tailored Jeans</h1>
+                <p class="price">5000 Frs</p>
+                <p><button>Acheter | <i class="ri-shopping-cart-line"></i></button></p>
+              </div>
+
+              <div class="card">
+                <img src="/assets/img/article-prototype.jpg" alt="Denim Jeans" style="width:100%">
+                <h1>Tailored Jeans</h1>
+                <p class="price">5000 Frs</p>
+                <p><button>Acheter | <i class="ri-shopping-cart-line"></i></button></p>
+              </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <%- include ('footer.ejs') %>
+   <!-- mobile nav end -->
+</footer>
+<!-- End of toggle menu -->
+<script src="/main.js"></script>

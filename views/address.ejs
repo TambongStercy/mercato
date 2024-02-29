@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="addresse.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
+
+    <title>Mercato | Address</title>
+</head>
+
+<body>
+    <header>
+        <section id="Top-bar">
+            <div id="top-bar">
+                <div class="menu">
+                    <a href="#"><i class="ri-menu-2-line"></i></a>
+                </div>
+                <img src="assets/logo-no-background.png" alt="Mercato Logo" class="top-bar-logo">
+                <div class="search">
+                    <i class="ri-search-2-line"></i>
+                </div>
+            </div>
+        </section>
+        <!-- End of the top bar -->
+    </header>
+    <main>
+        <section id="address">
+            <h1>Ajouter une addresse de livraison</h1>
+
+            <div id="button-container">
+                <form action="/address" method="post" id="auto-form">
+                    <input type="text" name="orderId" value="<%= orderId %>" hidden>
+                    <input type="text" name="lat" id="lat" hidden>
+                    <input type="text" name="long" id="long" hidden>
+                    <button type="submit" id="auto-submit">Utiliser la localisation actuelle</button>
+                </form>
+                <button onclick="showManualForm()">Ajouter manuellement</button>
+            </div>
+
+            <div id="form-container">
+                <form id="manual-form" method="post" action="/address">
+                    <input type="text" name="orderId" value="<%= orderId %>" hidden>
+
+                    <label for="quarter">Nom:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="quarter">Ville:</label>
+                    <input type="text" id="town" name="town" required>
+
+                    <label for="name">Quartier:</label>
+                    <input type="text" id="quater" name="quater" required>
+
+                    <label for="name">On dit quoi a la moto:</label>
+                    <input type="text" id="description" name="description">
+
+                    <label for="phone">Tel:</label>
+                    <input type="tel" id="phone" name="phone" required>
+
+                    <button type="submit">Confirmer</button>
+
+                    <div style="height: 500;"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <!-- Menu de basculement -->
+    <footer>
+        <%- include ("footer.ejs") %>
+    </footer>
+    <!-- mobile nav end -->
+    </footer>
+
+
+
+    <script src="/addresse.js"></script>
+</body>
+
+</html>

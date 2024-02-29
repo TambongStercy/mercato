@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr"> <!-- Modification de "en" à "fr" pour indiquer le français -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercato | Accessoires</title>
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/shop.css">
+</head>
+<body>
+    <!-- Version PC -->
+    <div id="pc">
+        <img src="/assets/logo-no-background.png" alt="">
+        <h1 style="text-align: center;">DISPONIBLE UNIQUEMENT EN VERSION MOBILE</h1>
+    </div>
+    <!-- Fin de la version PC -->
+
+    <!-- Version mobile -->
+    <!-- Barre supérieure mobile -->
+    <header>
+        <section id="Top-bar">
+            <div id="top-bar">
+                <div class="menu">
+                    <!-- <a href="/notifications.html"><i class="ri-menu-2-line"></i></a> -->
+                </div>
+                <img src="/assets/logo-no-background.png" alt="Logo de Mercato" class="top-bar-logo"> <!-- Modification du texte alternatif -->
+                <div class="search">
+                    <i class="ri-search-2-line"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- <section id="homme-categories">
+            <div id="top-selection">
+                <div class="cat-man-one">
+                    <h5><a href="#">Hauts</a></h5>
+                </div>
+                <div class="cat-man-two">
+                    <h5><a href="#">Pantalons</a></h5>
+                </div>
+            </div>
+        </section> -->
+    </header>
+    <!-- Fin de la barre supérieure mobile -->
+
+    <main>
+        <section id="Produits">
+            <div class="article-heading">
+                <h5>Accessoires</h5> <!-- Modification de "Vetements" à "Vêtements" -->
+            </div>
+  
+            <% if (products.length > 0) { %>
+                <% products.forEach((product) => { %>
+                    <% console.log(product) %>
+                    <div id="article">
+                        <div class="card">
+                            <img src="<%= product.imagePath %>" alt="Jean en denim" style="width:100%"> <!-- Modification du texte alternatif -->
+                            <h1><%= product.name %></h1>
+                            <p class="price"><%= product.sellingPrice %> FCFA</p>
+                            <p><a href="/single-product?prdtId=<%= product._id %>"><button>Acheter | <i class="ri-shopping-cart-line"></i></button></a></p> <!-- Ajout d'un espace après "Acheter" -->
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <h4 style="color: black; padding: auto 0 auto 0;">Aucun produit disponible</h4> <!-- Modification de "No" à "Aucun" et traduction du texte -->
+            <% } %>
+        </section>
+    </main>
+
+    <footer>
+        <%- include ('footer.ejs') %>
+    </footer>
+
+
+    <script src="/main.js"></script>
+    <script type="">
+        function filterProducts(category) {
+            console.log(category + ' was pressed')
+
+            const products = <%- JSON.stringify(products) %>;
+
+            products.forEach((product) => {
+                const productsSection = document.getElementById('Produits');
+                productsSection.innerHTML = `
+                <div class="article-heading">
+                    <h5>Vêtements pour hommes</h5>
+                </div>`;
+                if (product.category.toLowerCase() == category.toLowerCase()) {
+                    console.log('here')
+                    productsSection.innerHTML += `
+                <div id="article" class="${product.category}">
+                    <div class="card">
+                        <img src="${product.imagePath}" alt="Jean en denim" style="width:100%">
+                        <h1>${product.name}</h1>
+                        <p class="price">${product.sellingPrice} FCFA</p>
+                        <p><a href="/single-product?prdtId=${product._id}"><button>Ajouter au panier | <i class="ri-shopping-cart-line"></i></button></a></p>
+                    </div>
+                </div>
+            `;
+                }
+            })
+        }
+    </script>
+
+</body>
+</html>

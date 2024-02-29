@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="user-page.css">
+  <link rel="stylesheet" href="style.css">
+  <link
+  href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
+  <title>Mercato | Utilisateur</title>
+</head>
+<body>
+    <main>
+        <div class="user-profile">
+            <div class="user-details">
+              <img src="https://via.placeholder.com/80" alt="User Profile Picture">
+              <div class="user-info">
+                <h2><%= user.name %></h2> <!--Hello brother-->
+                <p>Membre depuis: <%= created %> </p>
+              </div>
+            </div>
+            <div class="user-stats">
+              <div class="mer-points">
+                <h3>MER Points</h3>
+                <p>0 Points</p>
+              </div>
+            </div>
+            <div class="orders">
+                <h2>Mes commandes</h2>
+                <ul class="commandes">
+                    <li class="view"><a href="/cart"><i class="ri-shopping-cart-2-line"></i><p>Mon panier</p></a></li>
+                    <li class="track"><a href="track.html"><i class="ri-truck-line"></i><p>Livraison en cours</p></a></li>
+                </ul>
+            </div>
+            <div class="return orders">
+                <h2>Retours</h2>
+                <ul class="commandes">
+                    <li class="view"><a href="/"><i class="ri-mail-send-line"></i><p>Retourner un article</p></a></li> <!--This should send a whatsapp message to page admin-->
+                </ul>
+            </div>
+            <div class="return orders">
+              <h2>Log out</h2>
+              <ul class="commandes">
+                  <li class="view"><a href="/logout"><i class="ri-mail-send-line"></i><p>log out</p></a></li> <!--This should send a whatsapp message to page admin-->
+              </ul>
+          </div>
+          </div>
+    </main>
+    <footer>
+      <%- include('footer.ejs') %>
+   </footer>
+
+
+</body>
+</html>

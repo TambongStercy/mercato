@@ -1,0 +1,305 @@
+.fixed{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+}
+
+.flex{
+    display: flex;
+    justify-content: space-between;
+}
+
+.p-0{
+    padding: 0;
+}
+
+.title{
+    font-size: 4rem;
+    /* margin-left: 30px; */
+}
+
+table{
+    width: 100%;
+    background-color: #ffffff;
+}
+
+.item-color{
+    width: 100px;
+    height: 25px;
+    border-radius: 15px;
+}
+
+th{
+    /* text-align: center; */
+    padding: 20px 20px;
+}
+
+tr{
+    border: 1px #332a2a solid;
+    font-size: 1.5rem;
+}
+
+td{
+    color: #161a19;
+    padding: 10px;
+    text-align: center;
+    /* border: 1px #332a2a solid; */
+}
+
+table img{
+    width: 100px;
+    border-radius: 15px;
+}
+
+table button{
+    display: block;
+    padding: 3px 15px;
+    width: 120px;
+    border-radius: 15px;
+    color: #fff;
+}
+
+td{
+    border-bottom: #332a2a solid black;
+}
+
+.update{
+    outline: none;
+    background-color: #6f7891;
+    border: none;
+}
+
+.update:hover{
+    background-color: #343842;
+}
+
+.delete:hover{
+    background-color: #d80e0e;
+}
+
+.delete{
+    margin-top: 3px;
+    outline: none;
+    background-color: #ff1717;
+    border: none;
+}
+
+.wrapper:has(table){
+    padding: 1.5rem 4rem;
+}
+
+.t-bg{
+    display: grid;
+}
+
+.add-btn,
+.submit{
+    outline: none;
+    background-color: #1fee4c;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+    padding: 10px;
+    margin: 10px 10px;
+    font-size: 1.5rem;
+}
+
+.add-btn:hover,
+.submit:hover{
+    background-color: #10ff6b;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    padding: 2rem 3rem;
+    border-radius: 0.5rem;
+}
+
+.mody .modal-content {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.mody .modal-content::-webkit-scrollbar-thumb {
+    border-radius: 1em;
+    background-color: rgba(50, 50, 50, 0.781);
+}
+
+.mody .modal-content::-webkit-scrollbar-track {
+    border-radius: 1em;
+    background-color: rgba(255, 244, 244, 0.822);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5em;
+    color: #332a2a; 
+    cursor: pointer;
+}
+
+.active-modal {
+    opacity: 1;
+    visibility: visible;
+}
+
+#my-img{
+    display: none;
+}
+
+.my-img-container{
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+
+.camera{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 0%;
+    right: 5%;
+    text-align: center;
+    background-color: #343842;
+    border-radius: 50%;
+    padding: 12px;
+}
+
+.camera i{
+    font-size: 3rem;
+    margin-right: 0;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    position: relative;
+    color: #fff;
+}
+
+.camera:hover{
+    cursor: pointer;
+}
+
+.my-img{
+    width: 300px;
+    height: 300px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+#color{
+    padding: 2px;
+}
+
+.my-img:hover{
+    cursor: pointer;
+}
+
+.form-modal{
+    display: grid;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-items: stretch;
+    gap: 5px;
+}
+
+label{
+    font-size: 1.6rem;
+}
+
+.sub-title{
+    font-size: 3rem;
+}
+
+.input-text{
+    width: 100%;
+    background-color: #ebf1e9;
+    color: #332a2a;
+    /* margin: 10px 0px; */
+    /* font-family: var(--body-font); */
+    /* font-size: var(--normal-font-size); */
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    padding: 0.45rem 0.6rem;
+}
+
+.submit{
+    margin: 15px 0 0;
+}
+
+.delt{
+    font-size: 1.5rem;
+}
+
+.delt .modal-content{
+    font-size: 1.5rem;
+    padding: 1.5rem;
+}
+
+.opt{
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 20px 5px;
+}
+
+.opt button{
+    outline: none;
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+}
+
+.yes{
+    color: #d30707;
+}
+
+.no{
+    color: #03bd4a;
+}
+
+.yes:hover{
+    color: #fc2626;
+}
+
+.no:hover{
+    color: #10ff6b;
+}
+
+input[type='checkbox']:hover{
+    cursor: pointer;
+}
+
+@media screen and  (max-height: 700px){
+    .camera i{
+        font-size: 2rem
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .my-img{
+        /* width: 200px; */
+        /* height: 200px; */
+    }
+}

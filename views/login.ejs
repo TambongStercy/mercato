@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr"> <!-- Modification de "en" à "fr" pour indiquer le français -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/shop.css">
+    <link rel="stylesheet" href="connexion-inscription.css">
+    <!-- Suppression du lien vers ./style.css, car il est déjà inclus via /style.css -->
+    <title>Mercato | Connexion</title>
+</head>
+<body>
+    <main>
+        <section id="login">
+            <div class="form-container">
+                <img src="assets/logo-no-background.png" alt="Logo Mercato">
+                <p class="title" style="color: black;">Ravi de vous revoir parmi nous !</p> <!-- Modification de "vous revoir parmi nous" à "vous revoir parmi nous" -->
+                <form class="form" action="/login" method="post">
+                  <input type="email" class="input" placeholder="Email" name="email">
+                  <input type="password" class="input" placeholder="Mot de passe" name="password"> <!-- Correction de "mot de passe" -->
+                  <p class="page-link">
+                    <span class="page-link-label">Mot de passe oublié ?</span> <!-- Ajout de l'accent aigu sur "oublié" -->
+                  </p>
+                  <button class="form-btn" type="submit">Connexion</button>
+                </form>
+                <p class="sign-up-label">
+                  Pas de compte ? 😱<span class="sign-up-link"><a href="/signup">Inscription</a></span> <!-- Ajout d'un espace avant le point d'interrogation et d'un espace après l'émoji "😱" -->
+                </p>
+            </div>
+        </section>
+    </main>
+    <footer>
+      <%- include ('footer.ejs') %>
+    </footer>
+</body>
+</html>

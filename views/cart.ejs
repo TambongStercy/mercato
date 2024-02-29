@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/cart.css">
+  <title>Mercato | Panier</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/shop.css">
+</head>
+
+<body>
+
+  <script type="">
+    const prdts = <%- JSON.stringify(products) %>;
+
+    const cartItems = [];
+
+    let cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+
+    console.log(cartArray)
+    console.log(prdts)
+
+
+    const items = [];
+
+    if (cartArray)
+      cartArray.forEach((id) => {
+        prdts.forEach((prdt) => {
+          if (prdt._id == id) {
+            if (cartItems.includes(prdt)) {
+              //find the item in the items array and increments its count
+              const index = cartItems.indexOf(prdt);
+              items[index].count++;
+            } else {
+              items.push({
+                prdt: prdt,
+                count: 1
+              });
+              cartItems.push(prdt);
+            }
+          }
+        });
+      });
+
+  </script>
+
+  <section id="Top-bar">
+    <div id="top-bar">
+      <div class="menu">
+        <a href="/"><i class="ri-menu-2-line"></i></a>
+      </div>
+      <img src="/assets/logo-no-background.png" alt="Logo de Mercato" class="top-bar-logo">
+      <div class="search">
+        <i class="ri-search-2-line"></i>
+      </div>
+    </div>
+  </section>
+  <main>
+    <div class="container">
+      <div class="cart-items">
+        
+      </div>
+
+      <div class="total-cost">
+        Total : 5000 Frs <!-- Calculate total dynamically using JavaScript -->
+      </div>
+
+      <form action="/caisse" method="post">
+        <input type="text" name="productsId" class="prdt-input" hidden />
+        <button class="checkout-btn">Passer à la caisse</button>
+      </form>
+      <!--This button leads to flutterwave checkout page and if paiement is confirmed, the user is redirected to paiement complete page-->
+    </div>
+  </main>
+
+  <script>
+
+    const Total = document.querySelector(".total-cost");
+    const cartArea = document.querySelector(".cart-items");
+
+    let counts = 0;
+
+    if (items) {
+      items.forEach(({
+        prdt,
+        count
+      }, index) => {
+
+        // const {image, name, price, _id,} = prdt;                
+        const {
+          name,
+          sellingPrice,
+          _id,
+          size
+        } = prdt;
+
+
+        counts += count * sellingPrice;
+
+        cartArea.innerHTML +=
+          `<div class="cart-item">
+          <div class="item-image">
+            <img src="/assets/img/article-prototype.jpg" alt="Item Image">
+          </div>
+          <div class="item-details">
+            <h2>${name}</h2>
+            <p>Taille : ${size}</p>
+            <p>Prix : ${sellingPrice} Frs</p>
+          </div>
+          <div class="item-actions">
+            <input type="number" class="item-quantity" value="${count}" min="0" onchange="onChange(event)" id="${_id}">
+            <button class="remove-btn"><i class="ri-close-fill"></i></button>
+          </div>`;
+      });
+    }
+
+    Total.textContent = "Total : " + counts + " FCFA";
+
+
+    function onChange(e) {
+      const nVal = e.srcElement.value;
+      const id = e.srcElement.id;
+
+
+      items.forEach(({
+        prdt,
+        count
+      }, index) => {
+
+        const sellingPrice = prdt.sellingPrice;
+        if (id == prdt._id) {
+
+          if (nVal > count) {
+            console.log('incrementing')
+            // If javascript shopping cart session is not empty
+            if (!cartArray) {
+              cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+            }
+            //add item id to array
+            cartArray.push(id);
+
+            const cartJSON = JSON.stringify(cartArray);
+            sessionStorage.setItem('shopping-cart', cartJSON);
+          } else if (nVal < count) {
+            console.log('decrementing')
+
+            // If javascript shopping cart session is not empty
+            if (!cartArray) {
+              cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+            }
+            //remove element once if present
+            const index = cartArray.indexOf(id);
+            if (index > -1) {
+              cartArray.splice(index, 1);
+
+
+              const cartJSON = JSON.stringify(cartArray);
+              sessionStorage.setItem('shopping-cart', cartJSON);
+            }
+
+          } else {
+            console.log('nothing')
+          }
+
+
+          items[index].count = nVal;
+
+        }
+
+
+
+      })
+
+      updateTotal()
+    }
+
+    function updateTotal() {
+      if (items) {
+        let counts = 0;
+        items.forEach(({
+          prdt,
+          count
+        }) => {
+          const {
+            sellingPrice
+          } = prdt;
+          counts += sellingPrice * count;
+        })
+
+        Total.textContent = "Total : " + counts + " FCFA";
+
+      }
+      const cartItemsId = sessionStorage.getItem('shopping-cart');
+
+      if (cartItemsId) {
+        document.querySelector('.prdt-input').value = cartItemsId;
+        console.log(cartItemsId)
+      }
+
+    }
+
+    updateTotal()
+
+  </script>
+
+  <footer>
+
+    <%- include ("footer.ejs") %>
+  </footer>
+
+</body>
+
+</html>
