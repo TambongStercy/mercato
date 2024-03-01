@@ -149,7 +149,7 @@ const getOrders = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const products = await Product.find({})
-    res.render("admin/warehouse.ejs", { products });
+    res.render("admin/products.ejs", { products });
   } catch (err) {
     console.log(err);
   }
