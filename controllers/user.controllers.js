@@ -134,11 +134,7 @@ const postLogin = async (req, res) => {
             // Set cookie in response
             res.cookie("authToken", token, cookieOptions);
 
-            res.render("user-page.ejs", {
-              user,
-              created,
-              currentPage: "/Login",
-            });
+            res.redirect("/");
           }
         }
       });
