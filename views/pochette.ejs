@@ -121,7 +121,6 @@
     </footer>
     <!-- End of toggle menu -->
     <script src="/main.js"></script>
-
     <script type="">
         function filterProducts(category) {
             console.log(category + ' was pressed')
@@ -136,9 +135,50 @@
                 </div>`;
                 if (product.category.toLowerCase() == category.toLowerCase()) {
                     console.log('here')
+
+                    let sizes = '';
+
+                    product.size.split(',').forEach((size)=> { sizes += `<span>${ size }</span>` })
+
                     productsSection.innerHTML += `
                 <div id="article" class="${product.category}">
                     <div class="card">
+                        <div class="card-header">
+                                <h3>${ product.name }</h3>
+                                <p>Achète-moi🥺</p>
+                                <span>New</span>
+                            </div>
+                    
+                            <div class="card-img">
+                                <img src="${ product.imagePath }" alt="${ product.name }">
+                                <i class="bx bx-heart"></i>
+                            </div>
+                    
+                            <div class="card-details">
+                                <div class="price">
+                                    <p>Prix</p>
+                                    <strong>${ product.sellingPrice } FCFA</strong>
+                                </div>
+                                <div class="colors">
+                                    <div class="selected">
+                                        <i class="bx bx-check"></i>
+                                    </div>
+                                    <div>
+                                        <i class="bx bx-check"></i>
+                                    </div>
+                                    <div>
+                                        <i class="bx bx-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="card-sizes">
+                                ${sizes}
+                            </div>
+                    
+                            <div class="card-footer">
+                                <p><a href="/single-product?prdtId=${ product._id }"><button>Acheter</button></a></p>
+                            </div>
                         <img src="${product.imagePath}" alt="Jean en denim" style="width:100%">
                         <h1>${product.name}</h1>
                         <p class="price">${product.sellingPrice} FCFA</p>
