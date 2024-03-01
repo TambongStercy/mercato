@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr"> <!-- Modification de "en" à "fr" pour indiquer le français -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Découvrez une sélection tendance de chaussures, vêtements, sacs, accessoires et pochettes pour hommes et femmes chez MercatoCMR. Trouvez les dernières tendances de la mode avec une qualité exceptionnelle. Livraison rapide et retour gratuit.">
+    <meta name="keywords"
+        content="MercatoCMR, boutique en ligne, chaussures, vêtements, sacs, accessoires, pochettes, mode, hommes, femmes, tendances, qualité, livraison rapide">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Simbtech">
+    <meta name="language" content="Français">
+    <meta name="distribution" content="global">
+    <meta name="revisit-after" content="7 days">
+    <meta name="geo.region" content="FR">
+    <meta name="geo.placename" content="Cameroun">
+    <meta name="geo.position" content="latitude;longitude">
+    <meta name="ICBM" content="latitude, longitude">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
     <title>Mercato | Accessoires</title>
-    <link
-    href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/shop.css">
 </head>
+
 <body>
     <!-- Version PC -->
     <div id="pc">
@@ -25,7 +46,8 @@
                 <div class="menu">
                     <!-- <a href="/notifications.html"><i class="ri-menu-2-line"></i></a> -->
                 </div>
-                <img src="/assets/logo-no-background.png" alt="Logo de Mercato" class="top-bar-logo"> <!-- Modification du texte alternatif -->
+                <img src="/assets/logo-no-background.png" alt="Logo de Mercato" class="top-bar-logo">
+                <!-- Modification du texte alternatif -->
                 <div class="search">
                     <i class="ri-search-2-line"></i>
                 </div>
@@ -50,22 +72,64 @@
             <div class="article-heading">
                 <h5>Accessoires</h5> <!-- Modification de "Vetements" à "Vêtements" -->
             </div>
-  
-            <% if (products.length > 0) { %>
-                <% products.forEach((product) => { %>
+
+            <% if (products.length> 0) { %>
+                <% products.forEach((product)=> { %>
                     <% console.log(product) %>
-                    <div id="article">
-                        <div class="card">
-                            <img src="<%= product.imagePath %>" alt="Jean en denim" style="width:100%"> <!-- Modification du texte alternatif -->
-                            <h1><%= product.name %></h1>
-                            <p class="price"><%= product.sellingPrice %> FCFA</p>
-                            <p><a href="/single-product?prdtId=<%= product._id %>"><button>Acheter | <i class="ri-shopping-cart-line"></i></button></a></p> <!-- Ajout d'un espace après "Acheter" -->
-                        </div>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <h4 style="color: black; padding: auto 0 auto 0;">Aucun produit disponible</h4> <!-- Modification de "No" à "Aucun" et traduction du texte -->
-            <% } %>
+                        <div id="article">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>
+                                        <%= product.name %>
+                                    </h3>
+                                    <p>Achète-moi🥺</p>
+                                    <span>New</span>
+                                </div>
+
+                                <div class="card-img">
+                                    <img src="<%= product.imagePath %>" alt="<%= product.name %>">
+                                    <i class="bx bx-heart"></i>
+                                </div>
+
+                                <div class="card-details">
+                                    <div class="price">
+                                        <p>Prix</p>
+                                        <strong>
+                                            <%= product.sellingPrice %> FCFA
+                                        </strong>
+                                    </div>
+                                    <div class="colors">
+                                        <div class="selected">
+                                            <i class="bx bx-check"></i>
+                                        </div>
+                                        <div>
+                                            <i class="bx bx-check"></i>
+                                        </div>
+                                        <div>
+                                            <i class="bx bx-check"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-sizes">
+                                    <span class="selected">38</span>
+                                    <span>39</span>
+                                    <span>40</span>
+                                    <span>41</span>
+                                    <span>42</span>
+                                    <span>43</span>
+                                </div>
+
+                                <div class="card-footer">
+                                    <p><a href="/single-product?prdtId=<%= product._id %>"><button>Acheter</button></a>
+                                    </p>
+                                </div>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <h4 style="color: black; padding: auto 0 auto 0;">Aucun produit disponible</h4>
+                                    <!-- Modification de "No" à "Aucun" et traduction du texte -->
+                                    <% } %>
         </section>
     </main>
 
@@ -105,4 +169,5 @@
     </script>
 
 </body>
+
 </html>

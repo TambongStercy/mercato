@@ -73,8 +73,7 @@ const getPochette = async (req, res) => {
 
 const getCart = async (req, res) => {
   try {
-    const products = await Product.find({});
-    res.render("cart.ejs", { products, currentPage: "/cart" });
+    res.render("cart.ejs", { currentPage: "/cart" });
   } catch (error) {
     console.log(error);
   }
@@ -98,20 +97,13 @@ const getSingleProduct = async (req, res) => {
 };
 
 const getLogin = async (req, res) => {
-  const token = req.cookies.authToken;
-
-  const user = await User.findOne({ token: token });
-  if (!user) {
-    res.render("login.ejs", { currentPage: "/Login" });
-  } else {
-    res.redirect("user-page", { currentPage: "/Login" });
-  }
+  res.render("login.ejs", { currentPage: "/Login" });
 };
 
 const postLogin = async (req, res) => {
   async function authenticateUser(email, password) {
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email:  { $regex: new RegExp(email, 'i') } });
 
       if (!user) {
         res.send("User not found.");
@@ -174,7 +166,7 @@ const postSignup = async (req, res) => {
   async function addUser(userData) {
     try {
       const existingUser = await User.findOne({
-        $or: [{ email: userData.email }, { telephone: userData.telephone }],
+        $or: [{ email: { $regex: new RegExp(userData.email, 'i') } }, { telephone: userData.telephone }],
       });
       if (existingUser) {
         res.send("User with this email or telephone number already exists.");
@@ -227,8 +219,8 @@ const postSignup = async (req, res) => {
 
 const getUserPage = async (req, res) => {
   const token = req.cookies.authToken;
-  
-  const user = await User.findOne({token:  token});
+
+  const user = await User.findOne({ token: token });
 
   const created = user.formattedCreatedAt();
 
@@ -329,19 +321,15 @@ const postCaisse = async (req, res) => {
 
     const userID = user.id; // Using optional chaining
 
-    const prdtIds = JSON.parse(req.body.productsId);
-
-    const prdtsCounts = countOccurrences(prdtIds);
+    const prdtsCounts = JSON.parse(req.body.products);
 
     const products = [];
 
     let totalAmount = 0;
 
-    console.log(prdtsCounts)
-
-
     for (const IdAndCount of prdtsCounts) {
-      const prdtId = IdAndCount.value;
+      const prdtId = IdAndCount.prdt.id;
+      const size = IdAndCount.prdt.size;
       const prdtCount = IdAndCount.count;
       const product = await Product.findById(prdtId);
 
@@ -349,8 +337,7 @@ const postCaisse = async (req, res) => {
         continue
       }
 
-
-      products.push({ prdtId: prdtId, count: prdtCount });
+      products.push({ prdtId: prdtId, count: prdtCount, size: size});
 
       totalAmount += prdtCount * product.sellingPrice;
     }
@@ -371,26 +358,6 @@ const postCaisse = async (req, res) => {
   }
 };
 
-function countOccurrences(arr) {
-  const occurrenceMap = {};
-
-  // Count occurrences of each string
-  arr.forEach((item) => {
-    if (occurrenceMap[item]) {
-      occurrenceMap[item]++;
-    } else {
-      occurrenceMap[item] = 1;
-    }
-  });
-
-  // Create an array of objects with value and count properties
-  const resultList = [];
-  for (const key in occurrenceMap) {
-    resultList.push({ value: key, count: occurrenceMap[key] });
-  }
-
-  return resultList;
-}
 
 const getLogout = async (req, res) => {
   const token = req.cookies.authToken;
@@ -431,7 +398,7 @@ const flwWebhook = async (req, res) => {
       order.paied = true;
       await order.save();
 
-      sendOrderToAdmin(order);
+      sendOrderToAdmin(req, order);
     } else if (status === "failed") {
       console.log("failed webhook payment");
     } else {
@@ -448,7 +415,7 @@ const getPaymentComplete = async (req, res) => {
   res.render("payment-complete.ejs", { currentPage: "/" });
 }
 
-const sendOrderToAdmin = async (order) => {
+const sendOrderToAdmin = async (req,order) => {
   const totalAmount = order.totalAmount;
   const userId = order.customer;
   const products = order.products;
@@ -456,7 +423,16 @@ const sendOrderToAdmin = async (order) => {
   let displayAddress = "";
 
   if (address.latitude && address.longitude) {
-    displayAddress = `<br/>latitude: ${address.latitude}<br/>longitude: ${address.longitude}`;
+    displayAddress = `<br/>latitude: ${address.latitude}
+    <br/>longitude: ${address.longitude} 
+    <br/> <a href ='https://maps.google.com/?q=${address.latitude},${address.longitude}' style="
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid #6464645c;
+    border-radius: 5px;
+    background-color: #04AA6D;
+    ">view on google map</a>`;
   } else if (address.name && address.town && address.quater && address.phone) {
     displayAddress = `<br/>Vile: ${address.town}<br/>quartier: ${address.quater
       }</br/>description: ${address.description ?? ""}`;
@@ -466,18 +442,50 @@ const sendOrderToAdmin = async (order) => {
   const username = user.name;
   const useremail = user.email;
   const userphone = user.telephone;
-  const email = "Mercatoshopcmr@gmail.com";
+  // const email = "Mercatoshopcmr@gmail.com";
+  const email = "tambongsterling@gmail.com";
 
   const prdts = await Promise.all(
-    products.map(async ({ prdtId, count }) => {
+    products.map(async ({ prdtId, count, size }) => {
       const prdt = await Product.findById(prdtId);
       const prdtName = prdt.name;
       const category = prdt.category;
+      const type = prdt.type;
 
-      return `<li>${count} ${prdtName}, Category  ${category}</li>`;
+      const url = `${req.protocol}://${req.get('host')}${prdt.imagePath}`
+
+      return `<li>
+      <div style="
+      box-shadow: 0px 2px 8px rgba(29, 37, 56, 0.2);
+      max-width: 40%;
+      margin-top: 3%;
+      text-align: center;
+      border-radius: 15px;">
+          <img src="${url}" alt="Jean en denim" style="width:100%">
+          <h1 style="color: grey;font-size: 12px;">
+              Nom: ${prdtName}
+          </h1>
+          <h3 style="color: grey;font-size: 10px;">
+              Catégory: ${category}
+          </h3>
+          <h3 style="color: grey;font-size: 10px;">
+              Type: ${type}
+          </h3>
+          <h3 style="color: grey;font-size: 10px;">
+              Taille: ${size}
+          </h3>
+          <p style="
+          color: grey;
+          font-size: 10px;
+          ">
+              Quantité: ${count}
+          </p>
+      </div>
+    
+      
+      </li>`;
     })
   );
-  console.log(prdts);
 
   const joinedString = prdts.join("");
 
@@ -491,7 +499,7 @@ const sendOrderToAdmin = async (order) => {
         <a href="" style="font-size:1.4em;color: #92b127;text-decoration:none;font-weight:600">MERCATO </a>
       </div>
     <div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-      <h1 style="margin: 0 0 20px;">Order Notification</h1>
+      <h1 style="margin: 0 0 20px;">Commande Effectué</h1>
       <p style="margin: 0 0 20px;">Un client vient de passer une commande pour les articles suivants :</p>
       <ul style="margin: 0 0 20px;">
       ${joinedString}
@@ -522,9 +530,6 @@ const sendOrderToAdmin = async (order) => {
 };
 
 const testMail = async (req, res) => {
-  // const order = await Order.findById("65d920d346cc37fc0dfea6fe");
-  // sendOrderToAdmin(order);
-  // res.status(200).json({message: "Email sent😊"})
 };
 
 const verifyAuth = async (req, res, next) => {

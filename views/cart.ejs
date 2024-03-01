@@ -4,6 +4,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+  content="Découvrez une sélection tendance de chaussures, vêtements, sacs, accessoires et pochettes pour hommes et femmes chez MercatoCMR. Trouvez les dernières tendances de la mode avec une qualité exceptionnelle. Livraison rapide et retour gratuit.">
+  <meta name="keywords"
+      content="MercatoCMR, boutique en ligne, chaussures, vêtements, sacs, accessoires, pochettes, mode, hommes, femmes, tendances, qualité, livraison rapide">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Simbtech">
+  <meta name="language" content="Français">
+  <meta name="distribution" content="global">
+  <meta name="revisit-after" content="7 days">
+  <meta name="geo.region" content="FR">
+  <meta name="geo.placename" content="Cameroun">
+  <meta name="geo.position" content="latitude;longitude">
+  <meta name="ICBM" content="latitude, longitude">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
   <link rel="stylesheet" href="/cart.css">
   <title>Mercato | Panier</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
@@ -13,37 +33,30 @@
 
 <body>
 
-  <script type="">
-    const prdts = <%- JSON.stringify(products) %>;
+  <script>
 
-    const cartItems = [];
+    let cartItems = [];
 
-    let cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
-
-    console.log(cartArray)
-    console.log(prdts)
+    let cartArray = sessionStorage.getItem('shopping-cart') ? JSON.parse(sessionStorage.getItem('shopping-cart')) : [];
 
 
     const items = [];
 
-    if (cartArray)
-      cartArray.forEach((id) => {
-        prdts.forEach((prdt) => {
-          if (prdt._id == id) {
-            if (cartItems.includes(prdt)) {
-              //find the item in the items array and increments its count
-              const index = cartItems.indexOf(prdt);
-              items[index].count++;
-            } else {
-              items.push({
-                prdt: prdt,
-                count: 1
-              });
-              cartItems.push(prdt);
-            }
-          }
+    for (const prdt of cartArray) {
+      const { id, size } = prdt;
+
+      if (cartItems.some((itm) => itm.id == id && itm.size == size)) {
+        items[(items.findIndex(({ prdt }) => prdt.id == id && prdt.size == size))].count++;
+        // continue;  
+      } else {
+        items.push({
+          prdt: prdt,
+          count: 1
         });
-      });
+        cartItems.push(prdt)
+      }
+
+    }
 
   </script>
 
@@ -61,15 +74,15 @@
   <main>
     <div class="container">
       <div class="cart-items">
-        
+
       </div>
 
       <div class="total-cost">
-        Total : 5000 Frs <!-- Calculate total dynamically using JavaScript -->
+        Total : 0 Frs <!-- Calculate total dynamically using JavaScript -->
       </div>
 
       <form action="/caisse" method="post">
-        <input type="text" name="productsId" class="prdt-input" hidden />
+        <input type="text" name="products" class="prdt-input" hidden />
         <button class="checkout-btn">Passer à la caisse</button>
       </form>
       <!--This button leads to flutterwave checkout page and if paiement is confirmed, the user is redirected to paiement complete page-->
@@ -81,49 +94,17 @@
     const Total = document.querySelector(".total-cost");
     const cartArea = document.querySelector(".cart-items");
 
-    let counts = 0;
-
-    if (items) {
-      items.forEach(({
-        prdt,
-        count
-      }, index) => {
-
-        // const {image, name, price, _id,} = prdt;                
-        const {
-          name,
-          sellingPrice,
-          _id,
-          size,
-          imagePath,
-        } = prdt;
-
-
-        counts += count * sellingPrice;
-
-        cartArea.innerHTML +=
-          `<div class="cart-item">
-          <div class="item-image">
-            <img src="${imagePath}" alt="Item Image">
-          </div>
-          <div class="item-details">
-            <h2>${name}</h2>
-            <p>Taille : ${size}</p>
-            <p>Prix : ${sellingPrice} Frs</p>
-          </div>
-          <div class="item-actions">
-            <input type="number" class="item-quantity" value="${count}" min="0" onchange="onChange(event)" id="${_id}">
-            <button class="remove-btn"><i class="ri-close-fill"></i></button>
-          </div>`;
-      });
-    }
-
-    Total.textContent = "Total : " + counts + " FCFA";
-
 
     function onChange(e) {
       const nVal = e.srcElement.value;
-      const id = e.srcElement.id;
+      const idSize = e.srcElement.id;
+      const id = idSize.split(',')[0]
+      const size = idSize.split(',')[1]
+
+
+      // item = items.find(({prdt})=>{
+      //   return (id == prdt.id && size == prdt.size)
+      // })
 
 
       items.forEach(({
@@ -132,7 +113,7 @@
       }, index) => {
 
         const sellingPrice = prdt.sellingPrice;
-        if (id == prdt._id) {
+        if (id == prdt.id && size == prdt.size) {
 
           if (nVal > count) {
             console.log('incrementing')
@@ -141,7 +122,7 @@
               cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
             }
             //add item id to array
-            cartArray.push(id);
+            cartArray.push(prdt);
 
             const cartJSON = JSON.stringify(cartArray);
             sessionStorage.setItem('shopping-cart', cartJSON);
@@ -152,15 +133,14 @@
             if (!cartArray) {
               cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
             }
+
+
             //remove element once if present
-            const index = cartArray.indexOf(id);
-            if (index > -1) {
-              cartArray.splice(index, 1);
+            cartArray.splice(cartArray.findIndex(itm => itm.id == id && itm.size == size), 1)
 
+            const cartJSON = JSON.stringify(cartArray);
+            sessionStorage.setItem('shopping-cart', cartJSON);
 
-              const cartJSON = JSON.stringify(cartArray);
-              sessionStorage.setItem('shopping-cart', cartJSON);
-            }
 
           } else {
             console.log('nothing')
@@ -179,31 +159,75 @@
     }
 
     function updateTotal() {
-      if (items) {
-        let counts = 0;
-        items.forEach(({
-          prdt,
-          count
-        }) => {
-          const {
-            sellingPrice
-          } = prdt;
-          counts += sellingPrice * count;
-        })
 
-        Total.textContent = "Total : " + counts + " FCFA";
+      let counts = 0;
 
+      cartArea.innerHTML = '';
+      for (const item of items) {
+        const { prdt, count } = item;
+        
+        const {
+          name,
+          sellingPrice,
+          id,
+          size,
+          stock,
+          imagePath,
+        } = prdt;
+
+        counts += count * sellingPrice;
+
+        cartArea.innerHTML +=
+          `<div class="cart-item">
+          <div class="item-image">
+            <img src="${imagePath}" alt="Item Image">
+          </div>
+          <div class="item-details">
+            <h2>${name}</h2>
+            <p>Taille Choisi: ${size}</p>
+            <p>Prix: ${sellingPrice} Frs</p>
+          </div>
+          <div class="item-actions">
+            <input type="number" class="item-quantity" value="${count}" min="0" onchange="onChange(event)" id="${id},${size}">
+            <button class="remove-btn" onclick="removeItem('${id},${size}')"><i class="ri-close-fill"></i></button>
+          </div>`;
       }
-      const cartItemsId = sessionStorage.getItem('shopping-cart');
 
-      if (cartItemsId) {
-        document.querySelector('.prdt-input').value = cartItemsId;
-        console.log(cartItemsId)
+
+      Total.textContent = `Total: ${counts}FCFA`;
+
+      const cartItemsStored = sessionStorage.getItem('shopping-cart');
+
+      if (cartItemsStored) {
+        document.querySelector('.prdt-input').value = JSON.stringify(items);
       }
 
     }
 
+    function removeItem(idSize) {
+      const id = idSize.split(',')[0]
+      const size = idSize.split(',')[1]
+
+
+      if (!cartArray) {
+        cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+      }
+
+      cartArray = cartArray.filter(elem => elem.id != id || elem.size != size)
+      cartItems = cartItems.filter(elem => elem.id != id || elem.size != size)
+
+      const cartJSON = JSON.stringify(cartArray);
+      sessionStorage.setItem('shopping-cart', cartJSON);
+
+      const index = items.findIndex(({ prdt }) => prdt.id == id && prdt.size == size)
+      
+      items.splice(index, 1);
+
+      updateTotal()
+    }
+
     updateTotal()
+
 
   </script>
 

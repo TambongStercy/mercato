@@ -50,7 +50,6 @@ const getDashboard = async (req, res) => {
 const getClients = async (req, res) => {
   const users = await User.find({});
 
-  console.log(users);
   res.render("admin/clients.ejs", { users });
 };
 
@@ -79,7 +78,6 @@ const postProduct = async (req, res) => {
     let imageId;
     if (req.file) {
       image = `/img/${req.file.filename}`;
-      console.log(image);
       imageId = await createUploadFile(`public${image}`, process.env.PRDT_DIR)
     }
 
@@ -150,8 +148,7 @@ const getOrders = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
-    console.log(products);
+    const products = await Product.find({})
     res.render("admin/warehouse.ejs", { products });
   } catch (err) {
     console.log(err);

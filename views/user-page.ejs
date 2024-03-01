@@ -3,48 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+  content="Découvrez une sélection tendance de chaussures, vêtements, sacs, accessoires et pochettes pour hommes et femmes chez MercatoCMR. Trouvez les dernières tendances de la mode avec une qualité exceptionnelle. Livraison rapide et retour gratuit.">
+  <meta name="keywords"
+      content="MercatoCMR, boutique en ligne, chaussures, vêtements, sacs, accessoires, pochettes, mode, hommes, femmes, tendances, qualité, livraison rapide">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Simbtech">
+  <meta name="language" content="Français">
+  <meta name="distribution" content="global">
+  <meta name="revisit-after" content="7 days">
+  <meta name="geo.region" content="FR">
+  <meta name="geo.placename" content="Cameroun">
+  <meta name="geo.position" content="latitude;longitude">
+  <meta name="ICBM" content="latitude, longitude">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
   <link rel="stylesheet" href="user-page.css">
   <link rel="stylesheet" href="style.css">
   <link
   href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/b8b432d7d3.js" crossorigin="anonymous"></script>
+    <!-- import css file (style.css) -->
   <title>Mercato | Utilisateur</title>
 </head>
 <body>
     <main>
-        <div class="user-profile">
-            <div class="user-details">
-              <img src="https://via.placeholder.com/80" alt="User Profile Picture">
-              <div class="user-info">
-                <h2><%= user.name %></h2> <!--Hello brother-->
-                <p>Membre depuis: <%= created %> </p>
-              </div>
+      <div class="container">
+
+        <div class="profile-card">
+            <div class="profile-header"><!-- profile header section -->
+                <div class="main-profile">
+                    <div class="profile-image"></div>
+                    <div class="profile-names">
+                        <h1 class="username"><%= user.name %></h1>
+                        <small class="page-title">Membre depuis: <%= created %> </small>
+                    </div>
+                </div>
             </div>
-            <div class="user-stats">
-              <div class="mer-points">
-                <h3>MER Points</h3>
-                <p>0 Points</p>
-              </div>
+
+            <div class="profile-body"><!-- profile body section -->
+                <div class="profile-actions">
+                    <a href="/cart"><button class="follow"><p>Mon panier</p><i class="ri-shopping-cart-2-line"></i></button></a>
+                    <a href="/logout"><button class="message"><p>Déconnexion</p><i class="ri-logout-box-r-line"></i></button></a>
+                    <section class="bio">
+                        <div class="bio-header">
+                            <i class="fa fa-info-circle"></i>
+                            Info
+                        </div>
+                        <p class="bio-text">
+                            Les articles sont livrés sous 36 heures. Nous vous remercions de votre confiance !
+                        </p>
+                    </section>
+                </div>
+
+                <div class="account-info">
+                    <div class="data">
+                        <div class="important-data">
+                            <section class="data-item">
+                                <h3 class="value">+ 104</h3>
+                                <small class="title">Articles disponibles &nbsp;&nbsp;</small>
+                            </section>
+                            <section class="data-item">
+                                <h3 class="value">+ 21</h3>
+                                <small class="title">&nbsp;Catégories</small>
+                            </section>
+                            </section>
+                        </div>
+                        
+                    </div>
+
+                    <div class="social-media">
+                        <span>Suivez nous:</span>
+                        <a href="https://www.instagram.com/mercatocmr?igsh=MWZ1YzJhejh4ajFjcQ%3D%3D&utm_source=qr" class="media-link"><i class="fab fa-instagram-square"></i></a>
+                        <a href="https://www.threads.net/@mercatocmr" class="media-link"><i class="ri-threads-line"></i></a>
+                    </div>
+
+                    <div class="last-post">
+                        <div class="post-cover">
+                            <span class="last-badge">Last Post</span>
+                        </div>
+                        <h3 class="post-title">3D layer</h3>
+                        <button class="post-CTA">View</button>
+                    </div>
+                </div>
             </div>
-            <div class="orders">
-                <h2>Mes commandes</h2>
-                <ul class="commandes">
-                    <li class="view"><a href="/cart"><i class="ri-shopping-cart-2-line"></i><p>Mon panier</p></a></li>
-                    <li class="track"><a href="track.html"><i class="ri-truck-line"></i><p>Livraison en cours</p></a></li>
-                </ul>
-            </div>
-            <div class="return orders">
-                <h2>Retours</h2>
-                <ul class="commandes">
-                    <li class="view"><a href="/"><i class="ri-mail-send-line"></i><p>Retourner un article</p></a></li> <!--This should send a whatsapp message to page admin-->
-                </ul>
-            </div>
-            <div class="return orders">
-              <h2>Log out</h2>
-              <ul class="commandes">
-                  <li class="view"><a href="/logout"><i class="ri-mail-send-line"></i><p>log out</p></a></li> <!--This should send a whatsapp message to page admin-->
-              </ul>
-          </div>
-          </div>
+        </div>
+
+    </div>
     </main>
     <footer>
       <%- include('footer.ejs') %>

@@ -4,6 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+    content="Découvrez une sélection tendance de chaussures, vêtements, sacs, accessoires et pochettes pour hommes et femmes chez MercatoCMR. Trouvez les dernières tendances de la mode avec une qualité exceptionnelle. Livraison rapide et retour gratuit.">
+    <meta name="keywords"
+        content="MercatoCMR, boutique en ligne, chaussures, vêtements, sacs, accessoires, pochettes, mode, hommes, femmes, tendances, qualité, livraison rapide">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Simbtech">
+    <meta name="language" content="Français">
+    <meta name="distribution" content="global">
+    <meta name="revisit-after" content="7 days">
+    <meta name="geo.region" content="FR">
+    <meta name="geo.placename" content="Cameroun">
+    <meta name="geo.position" content="latitude;longitude">
+    <meta name="ICBM" content="latitude, longitude">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
     <title>Mercato | Ecommerce</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="/style.css">
@@ -18,11 +38,13 @@
         <h1 style="text-align: center;">DISPONIBLE UNIQUEMENT EN VERSION MOBILE</h1>
     </div>
 
-    <!-- Fin de la version PC -->
+    <script type="">
+        const aray = sessionStorage.getItem('shopping-cart') ? JSON.parse(sessionStorage.getItem('shopping-cart')) : [];
+        const sizes = <%- JSON.stringify(product.size) %>;
+        const product = <%- JSON.stringify(product) %>;
+        let size = sizes[0];
+    </script>
 
-    <!-- Version mobile -->
-
-    <!-- Mobile top bar -->
     <header>
         <section id="Top-bar">
             <div id="top-bar">
@@ -31,7 +53,7 @@
                 </div>
                 <img src="/assets/logo-no-background.png" alt="Mercato Logo" class="top-bar-logo">
                 <div class="search">
-                    <a href="/cart"><i class="ri-shopping-cart-2-line"></i></a>
+                    <a href="/cart" id="cart-num"><i class="ri-shopping-cart-2-line"></i>0</a>
                     <!-- <i class="ri-search-2-line"></i> -->
                 </div>
             </div>
@@ -79,7 +101,7 @@
             <h5>Tailles</h5>
 
             <% for(const size of product.size.split(',')){ %>
-                <a href="#" class="btn"> <span class="taille">
+                <a href="#" class="btn" onclick="changeSize('<%= size %>')"> <span class="taille">
                         <%= size %>
                     </span></a>
                 <% }%>
@@ -134,31 +156,55 @@
             </div>
         </footer>
         <script>
-        const aray = JSON.parse(sessionStorage.getItem('shopping-cart'));
-		// const count = aray?aray.length:0;
-		// const small = document.querySelector(".shopping-cart small");
-		// small.textContent = count;
-		
-		async function addToCart (elem) {
-            const button = document.getElementById('button');
-            button.textContent = 'Dans le panier';
-            const id = ('<%-product.id%>');
 
 
-			let cartArray = [];
-			// If javascript shopping cart session is not empty
-			if (sessionStorage.getItem('shopping-cart')) {
-				cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
-			}
-			cartArray.push(id);
 
-			var cartJSON = JSON.stringify(cartArray);
-			sessionStorage.setItem('shopping-cart', cartJSON);
+            function changeSize(selSize) {
+                const button = document.getElementById('button');
+                button.innerHTML = 'Ajoutez au panier | <i class="ri-shopping-cart-2-fill"></i>'
+                size = selSize;
+            }
 
-			// chang number of items in cart
-			const {length} = cartArray;
-			console.log(length);
-		}
+            // const count = aray?aray.length:0;
+            // const small = document.querySelector(".shopping-cart small");
+            // small.textContent = count;
+            async function addToCart(elem) {
+                const button = document.getElementById('button');
+                button.textContent = 'Dans le panier';
+
+
+                let cartArray = [];
+                // If javascript shopping cart session is not empty
+                if (sessionStorage.getItem('shopping-cart')) {
+                    cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+                }
+
+                cartArray.push({
+                    id: product._id,
+                    name: product.name,
+                    imagePath: product.imagePath,
+                    costPrice: product.costPrice,
+                    sellingPrice: product.sellingPrice,
+                    stock: product.stock,
+                    sizes: product.size,
+                    size: size,
+                });
+
+                var cartJSON = JSON.stringify(cartArray);
+                sessionStorage.setItem('shopping-cart', cartJSON);
+
+                // chang number of items in cart
+                const { length } = cartArray;
+
+                cartValue(length);
+            }
+
+            function cartValue(length) {
+                document.getElementById('cart-num').innerHTML = `<i class="ri-shopping-cart-2-line"></i>${length}`;
+                console.log('Pk')
+            }
+
+            cartValue(aray.length)
         </script>
         <script src="/main.js"></script>
 </body>
