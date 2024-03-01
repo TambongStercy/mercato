@@ -8,7 +8,19 @@
     content="Découvrez une sélection tendance de chaussures, vêtements, sacs, accessoires et pochettes pour hommes et femmes chez MercatoCMR. Trouvez les dernières tendances de la mode avec une qualité exceptionnelle. Livraison rapide et retour gratuit.">
     <meta name="keywords"
         content="MercatoCMR, boutique en ligne, chaussures, vêtements, sacs, accessoires, pochettes, mode, hommes, femmes, tendances, qualité, livraison rapide">
-
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Simbtech">
+    <meta name="language" content="Français">
+    <meta name="distribution" content="global">
+    <meta name="revisit-after" content="7 days">
+    <meta name="geo.region" content="FR">
+    <meta name="geo.placename" content="Cameroun">
+    <meta name="geo.position" content="latitude;longitude">
+    <meta name="ICBM" content="latitude, longitude">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>Mercato | Femme</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="/style.css">
@@ -135,54 +147,13 @@
                 const productsSection = document.getElementById('Produits');
                 productsSection.innerHTML = `
                 <div class="article-heading">
-                    <h5>Vêtements pour hommes</h5>
+                    <h5>Vêtements pour Femmes</h5>
                 </div>`;
                 if (product.category.toLowerCase() == category.toLowerCase()) {
                     console.log('here')
-
-                    let sizes = '';
-
-                    product.size.split(',').forEach((size)=> { sizes += `<span>${ size }</span>` })
-
                     productsSection.innerHTML += `
                 <div id="article" class="${product.category}">
                     <div class="card">
-                        <div class="card-header">
-                                <h3>${ product.name }</h3>
-                                <p>Achète-moi🥺</p>
-                                <span>New</span>
-                            </div>
-                    
-                            <div class="card-img">
-                                <img src="${ product.imagePath }" alt="${ product.name }">
-                                <i class="bx bx-heart"></i>
-                            </div>
-                    
-                            <div class="card-details">
-                                <div class="price">
-                                    <p>Prix</p>
-                                    <strong>${ product.sellingPrice } FCFA</strong>
-                                </div>
-                                <div class="colors">
-                                    <div class="selected">
-                                        <i class="bx bx-check"></i>
-                                    </div>
-                                    <div>
-                                        <i class="bx bx-check"></i>
-                                    </div>
-                                    <div>
-                                        <i class="bx bx-check"></i>
-                                    </div>
-                                </div>
-                            </div>
-                    
-                            <div class="card-sizes">
-                                ${sizes}
-                            </div>
-                    
-                            <div class="card-footer">
-                                <p><a href="/single-product?prdtId=${ product._id }"><button>Acheter</button></a></p>
-                            </div>
                         <img src="${product.imagePath}" alt="Jean en denim" style="width:100%">
                         <h1>${product.name}</h1>
                         <p class="price">${product.sellingPrice} FCFA</p>
