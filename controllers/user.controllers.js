@@ -51,9 +51,10 @@ const getFemme = async (req, res) => {
 const getAccessoires = async (req, res) => {
   try {
 
-    const regx = { $regex: new RegExp("accessories", "i") };
+    const regx = { $regex: new RegExp("accessoires", "i") };
 
     const products = await Product.find({ type: regx });
+
     res.render("accessories.ejs", { products, currentPage: "/" });
   } catch (error) {
     console.log(error);
