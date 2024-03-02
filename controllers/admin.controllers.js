@@ -44,7 +44,7 @@ const getDashboard = async (req, res) => {
 
   const userCount = await User.countDocuments();
 
-  res.render("admin/dashboard.ejs",{ userCount });
+  res.render("admin/dashboard.ejs", { userCount });
 };
 
 const getClients = async (req, res) => {
@@ -64,7 +64,7 @@ const getLogout = async (req, res) => {
 };
 
 const postProduct = async (req, res) => {
-  // const productImage = req.body.image;
+
   const productName = req.body.name;
   const productCost = req.body.costprice;
   const productSell = req.body.sellingprice;
@@ -186,11 +186,84 @@ const verifyAdmin = async (req, res, next) => {
   }
 };
 
+const modifyProduct = async (req, res) => {
+
+  const productName = req.body.name;
+  const productCost = req.body.costprice;
+  const productSell = req.body.sellingprice;
+  const productCategory = req.body.category;
+  const productSize = req.body.size;
+  const productType = req.body.type;
+  const productStock = req.body.stock;
+  const productSold = req.body.sold;
+  const id = req.query.id;
+
+  try {
+
+
+    const product = await Product.findById(id)
+
+    if (!product) {
+      console.log('product not found')
+      return res.redirect("/admin/products")
+    }
+
+    // Prepare the update object
+    const updateData = {};
+    if (productName) updateData.name = productName;
+    if (productCost) updateData.costPrice = productCost;
+    if (productSell) updateData.sellingPrice = productSell;
+    if (productCategory) updateData.category = productCategory;
+    if (productSize) updateData.size = productSize;
+    if (productType) updateData.type = productType;
+    if (productStock) updateData.stock = productStock;
+    if (productSold) updateData.sold = productSold;
+
+    let image;
+    let imageId;
+    if (req.file) {
+
+      if (product.imageId && product.imageId != null) {
+        await deleteDriveFile(product.imagePath)
+      }
+
+      image = `/img/${req.file.filename}`;
+      imageId = await createUploadFile(`public${image}`, process.env.PRDT_DIR)
+
+      updateData.imagePath = image
+      updateData.imageId = imageId
+    }
+
+    await Product.findByIdAndUpdate(id, updateData, { new: true }).exec()
+
+    console.log("Successfully updated product");
+    res.redirect('/admin/products')
+  } catch (error) {
+    console.error("Error updating product: " + error);
+    res.status(500).send("Error updating product");
+  }
+};
+
+const getmodyfyProduct = async (req, res) => {
+  try {
+    const id = req.query.id;
+
+    const product = await Product.findById(id);
+
+    console.log(product)
+
+    res.render("admin/modifyProduct.ejs", { product });
+  } catch (error) {
+    res.send('Server Error');
+  }
+};
+
 module.exports = {
   getSignup,
   getDashboard,
   getOrders,
   getProducts,
+  getmodyfyProduct,
   getaddProduct,
   postAdmin,
   postProduct,
@@ -199,4 +272,5 @@ module.exports = {
   verifyAdmin,
   downloadPrdtDrive,
   deleteProduct,
+  modifyProduct,
 };

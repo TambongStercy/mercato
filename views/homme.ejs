@@ -77,7 +77,7 @@
             </div>
             <% if (products.length> 0) { %>
                 <% products.forEach((product)=> { %>
-                    <% console.log(product) %>
+                    <!-- <% console.log(product) %> -->
                         <div id="article">
                             <div class="card">
                                 <div class="card-header">
@@ -87,7 +87,12 @@
                                 </div>
                         
                                 <div class="card-img">
-                                    <img src="<%= product.imagePath %>" alt="<%= product.name %>">
+                                    <img 
+                                        src="<%= product.imagePath %>" 
+                                        alt="<%= product.name %>" 
+                                        onerror="this.src='/assets/logo-no-background-white.png';" 
+                                        style="background-color: #020509; border-radius: 10px;"
+                                    >
                                     <i class="bx bx-heart"></i>
                                 </div>
                         
@@ -118,7 +123,11 @@
                                 </div>
                         
                                 <div class="card-footer">
-                                    <p><a href="/single-product?prdtId=<%= product._id %>"><button>Acheter💸</button></a></p>
+                                    <p>
+                                        <a href="<% product.stock>0?`/single-product?prdtId=${product._id}`:'' %>">
+                                            <button <% product.stock>0?'onclick="stockLimite()"':'' %> >Acheter💸</button>
+                                        </a>
+                                    </p>>
                                 </div>
                                 </div>
                         <% }); %>
@@ -135,32 +144,79 @@
 
     <script src="/main.js"></script>
     <script type="">
-            function filterProducts(category) {
-                console.log(category + ' was pressed')
+        function filterProducts(category) {
+            console.log(category + ' was pressed')
 
-                const products = <%- JSON.stringify(products) %>;
+            const products = <%- JSON.stringify(products) %>;
 
-                products.forEach((product) => {
-                    const productsSection = document.getElementById('Produits');
-                    productsSection.innerHTML = `
-                    <div class="article-heading">
-                        <h5>Vêtements pour hommes</h5>
-                    </div>`;
-                    if (product.category.toLowerCase() == category.toLowerCase()) {
-                        console.log('here')
-                        productsSection.innerHTML += `
-                    <div id="article" class="${product.category}">
-                        <div class="card">
-                            <img src="${product.imagePath}" alt="Jean en denim" style="width:100%">
-                            <h1>${product.name}</h1>
-                            <p class="price">${product.sellingPrice} FCFA</p>
-                            <p><a href="/single-product?prdtId=${product._id}"><button>Ajouter au panier | <i class="ri-shopping-cart-line"></i></button></a></p>
-                        </div>
-                    </div>
-                `;
+            const productsSection = document.getElementById('Produits');
+            productsSection.innerHTML = `
+            <div class="article-heading">
+                <h5>Vêtements pour hommes</h5> 
+            </div>`;
+            products.forEach((product) => {
+                if (product.category.toLowerCase() == category.toLowerCase()) {
+
+                    let sizes = ''
+                     for(const size of product.size.split(',')){ 
+                        sizes += `<span>
+                            ${size}
+                        </span>`
                     }
-                })
-            }
+
+                    productsSection.innerHTML += `
+                        <div id="article" class="${product.category}">
+                            <div class="card">
+                                <div class="card-header">
+                                                <h3>${product.name}</h3>
+                                                <p>🥺</p>
+                                                <span>😆</span>
+                                            </div>
+                                    
+                                            <div class="card-img">
+                                                <img 
+                                                src="${product.imagePath}" 
+                                                alt="${ product.name }" 
+                                                onerror="this.src='/assets/logo-no-background-white.png';"  
+                                                style="background-color: #020509; border-radius: 10px;"
+                                                >
+                                                <i class="bx bx-heart"></i>
+                                            </div>
+                                    
+                                            <div class="card-details">
+                                                <div class="price">
+                                                    <p>Prix</p>
+                                                    <strong>${product.sellingPrice} FCFA</strong>
+                                                </div>
+                                                <div class="colors">
+                                                    <div class="selected">
+                                                        <i class="bx bx-check"></i>
+                                                    </div>
+                                                    <div>
+                                                        <i class="bx bx-check"></i>
+                                                    </div>
+                                                    <div>
+                                                        <i class="bx bx-check"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="card-sizes">
+                                                ${sizes}
+                                            </div>
+                                    
+                                            <div class="card-footer">
+                                                <p><a href="${ product.stock>0?`/single-product?prdtId=${product._id}`:'' }"><button ${ product.size<=0?'onclick="stockLimite()"':'' } >Acheter💸</button></a></p>
+                                            </div>
+                            </div>
+                        </div>`;
+                }
+            })
+        }
+
+        function stockLimite(){
+            alert('Cet article est en rupture de stock. Revenez plus tard.')
+        }
     </script>
 </body>
 

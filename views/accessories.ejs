@@ -67,7 +67,7 @@
     <main>
         <section id="Produits">
             <div class="article-heading">
-                <h5>Accessoires</h5> <!-- Modification de "Vetements" à "Vêtements" -->
+                <h5>Accessoires</h5>
             </div>
 
             <% if (products.length> 0) { %>
@@ -117,7 +117,10 @@
                                 </div>
 
                                 <div class="card-footer">
-                                    <p><a href="/single-product?prdtId=<%= product._id %>"><button>Acheter💸</button></a>
+                                    <p>
+                                        <a href="<% product.stock>0?`/single-product?prdtId=${product._id}`:'' %>">
+                                            <button <% product.stock>0?'onclick="stockLimite()"':'' %> >Acheter💸</button>
+                                        </a>
                                     </p>
                                 </div>
                             </div>
@@ -140,27 +143,74 @@
             console.log(category + ' was pressed')
 
             const products = <%- JSON.stringify(products) %>;
+            const productsSection = document.getElementById('Produits');
+            productsSection.innerHTML = `
+            <div class="article-heading">
+                <h5>Accessoires</h5>
+            </div>`;
 
             products.forEach((product) => {
-                const productsSection = document.getElementById('Produits');
-                productsSection.innerHTML = `
-                <div class="article-heading">
-                    <h5>Vêtements pour hommes</h5>
-                </div>`;
                 if (product.category.toLowerCase() == category.toLowerCase()) {
-                    console.log('here')
+
+                    let sizes = ''
+                     for(const size of product.size.split(',')){ 
+                        sizes += `<span>
+                            ${size}
+                        </span>`
+                    }
+
                     productsSection.innerHTML += `
-                <div id="article" class="${product.category}">
-                    <div class="card">
-                        <img src="${product.imagePath}" alt="Jean en denim" style="width:100%">
-                        <h1>${product.name}</h1>
-                        <p class="price">${product.sellingPrice} FCFA</p>
-                        <p><a href="/single-product?prdtId=${product._id}"><button>Ajouter au panier | <i class="ri-shopping-cart-line"></i></button></a></p>
-                    </div>
-                </div>
-            `;
+                        <div id="article" class="${product.category}">
+                            <div class="card">
+                                <div class="card-header">
+                                                <h3>${product.name}</h3>
+                                                <p>🥺</p>
+                                                <span>😆</span>
+                                            </div>
+                                    
+                                            <div class="card-img">
+                                                <img
+                                                    src="${product.imagePath}"
+                                                    alt="${ product.name }"
+                                                    onerror="this.src='/assets/logo-no-background-white.png';"  
+                                                    style="background-color: #020509; border-radius: 10px;"
+                                                >
+                                                <i class="bx bx-heart"></i>
+                                            </div>
+                                    
+                                            <div class="card-details">
+                                                <div class="price">
+                                                    <p>Prix</p>
+                                                    <strong>${product.sellingPrice} FCFA</strong>
+                                                </div>
+                                                <div class="colors">
+                                                    <div class="selected">
+                                                        <i class="bx bx-check"></i>
+                                                    </div>
+                                                    <div>
+                                                        <i class="bx bx-check"></i>
+                                                    </div>
+                                                    <div>
+                                                        <i class="bx bx-check"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="card-sizes">
+                                                ${sizes}
+                                            </div>
+                                    
+                                            <div class="card-footer">
+                                                <p><a href="${ product.stock>0?`/single-product?prdtId=${product._id}`:'' }"><button ${ product.size<=0?'onclick="stockLimite()"':'' } >Acheter💸</button></a></p>
+                                            </div>
+                            </div>
+                        </div>`;
                 }
             })
+        }
+
+        function stockLimite(){
+            alert('Cet article est en rupture de stock. Revenez plus tard.')
         }
     </script>
 

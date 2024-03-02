@@ -321,7 +321,7 @@ const postCaisse = async (req, res) => {
 
     const products = [];
 
-    let totalAmount = 0;
+    let totalAmount = 1500;
 
     for (const IdAndCount of prdtsCounts) {
       const prdtId = IdAndCount.prdt.id;
@@ -438,8 +438,7 @@ const sendOrderToAdmin = async (req,order) => {
   const username = user.name;
   const useremail = user.email;
   const userphone = user.telephone;
-  // const email = "Mercatoshopcmr@gmail.com";
-  const email = "tambongsterling@gmail.com";
+  const email = "Mercatoshopcmr@gmail.com";
 
   const prdts = await Promise.all(
     products.map(async ({ prdtId, count, size }) => {

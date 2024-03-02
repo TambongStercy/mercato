@@ -61,6 +61,16 @@
       color: #fff;
       background-color: #ff1414;
     }
+
+    .modify-btn {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
   </style>
   <title>MERCATO | Admin</title>
 </head>
@@ -119,15 +129,25 @@
                     <th>Nom</th>
                     <th>cost-price</th>
                     <th>Selling price</th>
+                    <th>Category</th>
+                    <th>Type</th>
                     <th>Quantity Sold</th>
                     <th>En Stock</th><!--Here you do quantity added + plus initial quantity - Amount sold-->
-                    <th>Action</th>
+                    <th>Delete</th>
+                    <th>Modify</th>
                   </tr>
                 </thead>
                 <tbody>
                   <% products.forEach((product)=> { %>
                     <tr>
-                      <td><img src="<%= product.imagePath %>" alt="Product Image"></td>
+                      <td>
+                        <img 
+                        src="<%= product.imagePath %>" 
+                        onerror="this.src='/assets/logo-no-background-white.png';" 
+                        style="background-color: #020509; border-radius: 10px;" 
+                        alt="Product Image"
+                        >
+                      </td>
                       <td>
                         <%= product.name %>
                       </td>
@@ -137,17 +157,26 @@
                       <td>
                         <%= product.sellingPrice %>
                       </td>
+                      <td>
+                        <%= product.category %>
+                      </td>
+                      <td>
+                        <%= product.type %>
+                      </td>
                       <!-- <td>></td> -->
+                      <td>
+                        <%= product.sold %>
+                      </td>
                       <td>
                         <%= product.stock %>
                       </td>
-                      <td>
-                        <button class="stock-btn" data-type="reduce">-</button>
-                        <span class="stock-quantity">100</span>
-                        <button class="stock-btn" data-type="increase">+</button>
-                      </td>
                       <td><button class="remove-btn" onclick="showPopup('<%= product._id %>')"><i
                             class="ri-delete-bin-line"></i></button></td>
+                      <td>
+                        <a href="/admin/modifyproduct?id=<%= product._id %>">
+                          <button class="modify-btn">Modify Product</button>
+                        </a>
+                      </td>
                     </tr>
                     <% }); %>
                       <!-- More rows can be added here -->
@@ -178,7 +207,7 @@
           const deleteLink = document.getElementById('delete');
 
           // Change the href attribute
-          deleteLink.href = '/admin/delete?id='+id;
+          deleteLink.href = '/admin/delete?id=' + id;
 
           // Trigger a click event on the <a> element
           deleteLink.click();

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/admin/styles.css" />
+  <link rel="stylesheet" href="/admin/clients.css">
+  <link rel="stylesheet" href="/admin/style.css">
+  <title>MERCATO | Admin</title>
+  <style>
+    /* Styles for the popup container */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      /* Semi-transparent black background */
+    }
+
+    /* Styles for the popup content */
+    .popup-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    /* Style for the close button */
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin: 20px 50px;
+    }
+
+    .btn {
+      border: #545454 solid 1px;
+      color: #fff;
+      background-color: #c10000;
+      padding: 5px 7px;
+      border-radius: 5px;
+    }
+
+    .btn:hover {
+      border: #fff solid 1px;
+      color: #fff;
+      background-color: #ff1414;
+    }
+
+    .modify-btn {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+  </style>
+</head>
+
+<body id="body">
+  <div class="container">
+    <nav class="navbar">
+      <div class="nav_icon" onclick="toggleSidebar()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </div>
+      <div class="navbar__left">
+        <a class="active_link" href="/admin/">Dashboard</a>
+      </div>
+      <div class="navbar__right">
+        <a href="#">
+          <i class="fa fa-clock-o" aria-hidden="true"></i>
+        </a>
+        <a href="#">
+          <img width="30" src="/assets/avatar.svg" alt="" />
+          <!-- <i class="fa fa-user-circle-o" aria-hidden="true"></i> -->
+        </a>
+      </div>
+    </nav>
+
+    <main>
+      <div class="main__container">
+        <!-- MAIN TITLE STARTS HERE -->
+
+        <div class="main__title">
+          <img src="/assets/hello.svg" alt="" />
+          <div class="main__greeting">
+            <h1>Hello Admin
+            </h1> <!--Put the name of the admin that connected foolish-->
+            <p>Modify this Product(<%= product.name %>)
+            </p>
+          </div>
+        </div>
+
+        <!-- MAIN TITLE ENDS HERE -->
+
+        <!-- MAIN ADD ITEM STARTS HERE -->
+        <div class="main__cards">
+          <div class="main__container">
+            <div class="container">
+              <form action="/admin/modifyproduct?id=<%= product.id %>" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="image">Image:</label>
+                  <input type="file" id="image" accept="image/*" name="image" onchange="uploadAvatar(event)">
+                  <div class="my-img-container">
+                    <img 
+                      class="my-img" 
+                      src="<%= (product.imagePath) %>"
+                      onerror="this.src='/assets/logo-no-background-white.png';" 
+                      alt=""
+                      style="border-radius: 10%; height: 200px; width: auto; object-fit: cover; background-color: #000;">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="name">Name:</label>
+                  <input type="text" id="name" placeholder="<%= product.name %>" name="name">
+                </div>
+                <div class="form-group">
+                  <label for="cost-price">Cost Price:</label>
+                  <input type="number" id="cost-price" name="costprice" step="500"
+                    placeholder="<%= product.costPrice %>">
+                </div>
+                <div class="form-group">
+                  <label for="selling-price">Selling Price</label>
+                  <input type="number" id="selling-price" name="sellingprice" step="500"
+                    placeholder="<%= product.sellingPrice %>">
+                </div>
+                <div class="form-group">
+                  <label for="stock">Type:</label>
+                  <div class="select-dropdown">
+                    <select name="type">
+                      <option value="homme" <%= (product.type=='homme' )?'selected':'' %>>Homme</option>
+                      <option value="femme" <%=(product.type=='femme' )?'selected':'' %>>Femme</option>
+                      <option value="accessoires" <%=(product.type=='accessoires' )?'selected':'' %>>Accessoires
+                      </option>
+                      <option value="pochette" <%=(product.type=='pochette' )?'selected':'' %>>Pochette</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="stock">Category:</label>
+                  <div class="select-dropdown">
+                    <select name="category">
+                      <option value="hauts" <%=(product.category=='hauts' )?'selected':'' %>>Hauts</option>
+                      <option value="pantalons" <%=(product.category=='pantalons' )?'selected':'' %>>Pantalons</option>
+                      <option value="chaussures" <%=(product.category=='chaussures' )?'selected':'' %>>Chaussures
+                      </option>
+                      <option value="sacs" <%=(product.category=='sacs' )?'selected':'' %>>Sacs</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="selling-price">Size(s): </label>
+                  <input type="text" id="selling-price" name="size" placeholder="<%= product.size  %>">
+                </div>
+                <div class="form-group">
+                  <label for="stock">Stock:</label>
+                  <input type="number" id="stock" name="stock" placeholder="<%= product.stock  %>" >
+                </div>
+                <div class="form-group">
+                  <label for="stock">Qauntity Sold:</label>
+                  <input type="number" id="sold" name="sold" placeholder="<%= product.sold  %>" >
+                </div>
+
+                <button type="submit">Update</button>
+              </form>
+            </div>
+          </div>
+          <!-- MAIN ADD ITEMS ENDS HERE -->
+
+    </main>
+
+    <div id="sidebar">
+      <div class="sidebar__title">
+        <div class="sidebar__img">
+          <img src="/assets/logo-no-background-white.png" alt="logo" />
+          <h1>Mercato</h1>
+        </div>
+        <i onclick="closeSidebar()" class="fa fa-times" id="sidebarIcon" aria-hidden="true"></i>
+      </div>
+
+      <div class="sidebar__menu">
+        <div class="sidebar__link ">
+          <i class="fa fa-home"></i>
+          <a href="/admin/">Dashboard</a>
+        </div>
+        <h2>MNG</h2>
+        <div class="sidebar__link">
+          <i class="fa fa-user-secret" aria-hidden="true"></i>
+          <a href="/admin/addproduct">Ajouter un article</a>
+        </div>
+        <div class="sidebar__link">
+          <i class="fa fa-archive"></i>
+          <a href="/admin/products">Warehouse</a>
+        </div>
+        <div class="sidebar__link active_menu_link">
+          <i class="fa fa-handshake-o"></i>
+          <a href="/admin/clients">Clients</a>
+        </div>
+        <h2>Promo</h2>
+        <div class="sidebar__link">
+          <i class="ri-discount-percent-fill"></i>
+          <a href="Coupon.html">Coupons</a>
+        </div>
+        <div class="sidebar__logout">
+          <i class="fa fa-power-off"></i>
+          <a href="/admin/logout">Log out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+
+
+    function uploadAvatar(e) {
+      const file = e.target.files[0];
+
+      const image = document.querySelector(".my-img");
+
+      console.log(document.querySelector(".my-img").src);
+
+      const img = URL.createObjectURL(file);
+
+      image.setAttribute("src", img);
+
+    }
+  </script>
+</body>
+
+</html>
