@@ -37,7 +37,7 @@ const { downloadPrdtDrive } = require("./controllers/admin.controllers");
 async function initializeServer() {
   console.log('Server is initializing...');
 
-  await downloadPrdtDrive()
+  // await downloadPrdtDrive()
 }
 
 
