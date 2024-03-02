@@ -145,7 +145,8 @@
 
 .card .card-img img {
     width: 100%;
-    height: fit-content;
+    max-height: 350px; /* Adjusted maximum height */
+    height: auto; 
     transition: .4s;
 }
 
