@@ -138,10 +138,9 @@
 
 .card .card-img {
     position: relative;
-    height: 220px;
     border-radius: 12px;
     margin: 22px 0;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .card .card-img img {
