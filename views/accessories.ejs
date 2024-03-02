@@ -118,8 +118,10 @@
 
                                 <div class="card-footer">
                                     <p>
-                                        <a href="<% product.stock>0?`/single-product?prdtId=${product._id}`:'' %>">
-                                            <button <% product.stock>0?'onclick="stockLimite()"':'' %> >Acheter💸</button>
+                                        <a href=<%= product.stock>0?`/single-product?prdtId=${product._id}`:'#' %> >
+                                            <button <%= product.stock<=0?'onclick=stockLimite()':'' %> >
+                                                Acheter💸
+                                            </button>
                                         </a>
                                     </p>
                                 </div>
@@ -201,7 +203,7 @@
                                             </div>
                                     
                                             <div class="card-footer">
-                                                <p><a href="${ product.stock>0?`/single-product?prdtId=${product._id}`:'' }"><button ${ product.size<=0?'onclick="stockLimite()"':'' } >Acheter💸</button></a></p>
+                                                <p><a href="${ product.stock>0?`/single-product?prdtId=${product._id}`:'#' }"><button ${ product.size<=0?'onclick="stockLimite()"':'' } >Acheter💸</button></a></p>
                                             </div>
                             </div>
                         </div>`;
@@ -210,6 +212,7 @@
         }
 
         function stockLimite(){
+            console.log('BAB')
             alert('Cet article est en rupture de stock. Revenez plus tard.')
         }
     </script>

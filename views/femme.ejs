@@ -128,8 +128,10 @@
 
                                     <div class="card-footer">
                                         <p>
-                                            <a href="<% product.stock>0?`/single-product?prdtId=${product._id}`:'' %>">
-                                                <button <% product.stock>0?'onclick="stockLimite()"':'' %> >Acheter💸</button>
+                                            <a href=<%= product.stock>0?`/single-product?prdtId=${product._id}`:'#' %> >
+                                                <button <%= product.stock<=0?'onclick=stockLimite()':'' %> >
+                                                    Acheter💸
+                                                </button>
                                             </a>
                                         </p>
                                     </div>
