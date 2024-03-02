@@ -182,7 +182,7 @@
           <div class="item-details">
             <h2>${name}</h2>
             <p>Taille Choisi: ${size}</p>
-            <p>Prix: ${sellingPrice} Frs</p>
+            <p>Prix: ${sellingPrice} FCFA</p>
           </div>
           <div class="item-actions">
             <input type="number" class="item-quantity" value="${count}" min="0" onchange="onChange(event)" id="${id},${size}">
@@ -191,7 +191,7 @@
       }
 
 
-      Total.textContent = `Total: ${counts}FCFA`;
+      Total.textContent = `Total(Livraison incluse): ${counts + 1500}FCFA`;
 
       const cartItemsStored = sessionStorage.getItem('shopping-cart');
 

@@ -110,16 +110,9 @@
     height: min-content;
     padding: 25px;
     background: #ffffff;
-    border: 2px solid #e1e3e6;
     border-radius: 20px;
     transition: .4s;
-    margin-bottom: 2vh;
-}
-
-.card:hover {
-    border-color: #ffffff;
-    transform: translateY(-10px);
-    box-shadow: 0 5px 12px rgba(0, 0, 0, .08);
+    margin-top: 2vh;
 }
 
 .card .card-header h3 {
@@ -148,12 +141,12 @@
     height: 220px;
     border-radius: 12px;
     margin: 22px 0;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .card .card-img img {
     width: 100%;
-    height: 100%;
+    height: fit-content;
     transition: .4s;
 }
 
@@ -237,7 +230,7 @@
     width: 100%;
     height: 46px;
     border-radius: 12px;
-    background: linear-gradient(#6787fd, #3f66f5);
+    background: linear-gradient(#2c2c2c, #000000);
     color: #ffffff;
     font-size: 20px;
     letter-spacing: .5px;
