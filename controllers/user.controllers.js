@@ -295,7 +295,7 @@ const postAddress = async (req, res) => {
         },
         customizations: {
           title: Mercato,
-          logo: /assets/logo-no-background.png,
+          logo: "/assets/logo-no-background.png",
           description: "Nous vous remercions d'avoir choisi MERCATO pour vos achats. Nous sommes impatients de vous revoir très bientôt pour de nouvelles découvertes.",
         },
       },
