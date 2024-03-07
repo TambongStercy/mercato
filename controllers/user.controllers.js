@@ -193,7 +193,7 @@ const postSignup = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: "Strict",
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 1 day
           };
 
           console.log("cookie created");
@@ -287,11 +287,16 @@ const postAddress = async (req, res) => {
         amount: total,
         currency: "XAF",
         redirect_url: redirectUrl,
-        payment_options: "mobilemoneyghana, mobilemoneyfranco, card",
+        payment_options: "mobilemoneyghana, mobilemoneyfranco, card, ussd",
         customer: {
           email: useremail,
           phonenumber: userphone,
           name: username,
+        },
+        customizations: {
+          title: Mercato,
+          logo: /assets/logo-no-background.png,
+          description: "Nous vous remercions d'avoir choisi MERCATO pour vos achats. Nous sommes impatients de vous revoir très bientôt pour de nouvelles découvertes.",
         },
       },
       options
@@ -515,7 +520,7 @@ const sendOrderToAdmin = async (req,order) => {
       <hr style="border:none;border-top:1px solid #eee" />
       <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
         <p>Mercato Buisness Inc</p>
-        <p>Developer par Simbtech,<br /> copyright ©</p>
+        <p>Developed by Simbtech,<br /> copyright ©</p>
         <p>Cameroun-Yaoundé</p>
       </div>
     </div>
