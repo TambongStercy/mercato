@@ -299,7 +299,7 @@ const postAddress = async (req, res) => {
           description: "Nous vous remercions d'avoir choisi MERCATO pour vos achats. Nous sommes impatients de vous revoir très bientôt pour de nouvelles découvertes.",
         },
       },
-      
+      options
     );
 
     const data = response.data.data;
