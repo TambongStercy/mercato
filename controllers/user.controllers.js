@@ -1,13 +1,14 @@
 const User = require("../models/UserModel");
 const Product = require("../models/Product");
 const Order = require("../models/order");
+const Promo = require("../models/promo");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
 const nodemailer = require("nodemailer");
-
+let discount = 0;
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   secure: false, // use SSL
@@ -24,6 +25,7 @@ const transporter = nodemailer.createTransport({
 const getHome = async (req, res) => {
   res.render("home.ejs", { currentPage: "/" });
 };
+
 
 const getHomme = async (req, res) => {
   try {
@@ -100,6 +102,8 @@ const getSingleProduct = async (req, res) => {
 const getLogin = async (req, res) => {
   res.render("login.ejs", { currentPage: "/Login" });
 };
+
+
 
 const postLogin = async (req, res) => {
   async function authenticateUser(email, password) {
@@ -314,19 +318,53 @@ const postAddress = async (req, res) => {
   }
 };
 
+const applyPromoCode = async (req, res, next) => {
+  const promoCode = req.body.promoCode; // Get the promo code from the request body
+  // Check if the promo code is "mars08" (case insensitive)
+  if (promoCode && promoCode.trim().toLowerCase() === "mars08") {
+    // Promo code is valid
+    discount = 1;
+    console.log(`Promo code applied successfully. discount ${discount}`);
+    // Your logic here for applying the discount or any other action
+    // For example, you might update the database, calculate the discounted price, etc.
+
+    // Send a response indicating success
+    res.status(200).json({ success: true, message: "Promo code applied successfully." });
+    next();
+  } else {
+    // Promo code is invalid or missing
+    console.log("Invalid promo code.");
+
+    // Your logic here for handling invalid promo code
+    // For example, you might display an error message, log the attempt, etc.
+
+    // Send a response indicating failure
+    res.status(400).json({ success: false, message: "Invalid promo code." });
+  }
+};
+
+
+
+const applyDiscount = (totalAmount) => {
+  // Apply a 20% discount (modify this logic as needed)
+  const discountedAmount = totalAmount * 0.8;
+  return discountedAmount;
+};
+
+
 const postCaisse = async (req, res) => {
   try {
-
     const token = req.cookies.authToken;
+    const user = await User.findOne({ token: token });
 
-    const user = await User.findOne({ token: token })
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
-    const userID = user.id; // Using optional chaining
+    const userID = user.id;
 
     const prdtsCounts = JSON.parse(req.body.products);
-
     const products = [];
-
     let totalAmount = 1500;
 
     for (const IdAndCount of prdtsCounts) {
@@ -336,12 +374,17 @@ const postCaisse = async (req, res) => {
       const product = await Product.findById(prdtId);
 
       if (!product) {
-        continue
+        continue;
       }
 
-      products.push({ prdtId: prdtId, count: prdtCount, size: size});
-
+      products.push({ prdtId: prdtId, count: prdtCount, size: size });
       totalAmount += prdtCount * product.sellingPrice;
+    }
+    if(discount === 1){
+      totalAmount = applyDiscount(totalAmount);
+      console.log(`New price with discount: ${totalAmount}`);
+    }else{
+      console.log("No discount");
     }
 
     const order = Order({
@@ -355,10 +398,10 @@ const postCaisse = async (req, res) => {
     return res.redirect("/address?orderId=" + order.id);
   } catch (error) {
     console.log("error: " + error);
-
-    res.status(500).json({ message: "an error occured pls try again later" });
+    res.status(500).json({ message: "An error occurred, please try again later" });
   }
 };
+
 
 
 const getLogout = async (req, res) => {
@@ -369,7 +412,7 @@ const getLogout = async (req, res) => {
   await user.deleteToken();
   res.clearCookie("authToken");
 
-  res.redirect("/login", { currentPage: "/Login" });
+  res.redirect("/login");
 };
 
 const flwWebhook = async (req, res) => {
@@ -571,6 +614,7 @@ module.exports = {
   getCart,
   getNewArticles,
   getSingleProduct,
+  applyPromoCode,
   getLogin,
   postLogin,
   getSignup,
@@ -584,4 +628,5 @@ module.exports = {
   flwWebhook,
   testMail,
   getPaymentComplete,
+  
 };

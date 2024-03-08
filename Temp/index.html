@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="master-container">
+        <div class="card cart">
+          <label class="title">Your cart</label>
+          <div class="products">
+            <div class="product cart-item">
+                <div class="item-image">
+                    <img src="${imagePath}" alt="Item Image"> <!--Make sur this image has a small size--> 
+                </div>
+              <div class="item-details">
+                <span>${name}</span>
+                <p>Taille Choisi: ${size}</p>
+                <button class="remove-btn" onclick="removeItem('${id},${size}')"><i class="ri-close-fill"></i></button>
+              </div>
+              <div class="quantity">
+                
+                <input type="number" class="item-quantity" value="${count}" min="0" onchange="onChange(event)" id="${id},${size}">
+                
+              </div>
+              <label class="price small">${sellingPrice} FCFA</label>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card coupons">
+          <label class="title">Code promo</label>
+          <form action="/submitPromo" method="POST" id="promoForm" class="form">
+            <input type="text" id="promo" name="promoCode" class="promo-input" placeholder="Ex: Mars08">
+              <input type="hidden" id="promoApplied" name="promoApplied" value="false"> 
+              <input type="submit" value="Confirmer😋" class="promo-submit" id="promoSubmit">
+          </form>
+        </div>
+      
+        <div class="card checkout">
+          <label class="title">Sommaire</label>
+          <div class="details">
+            <span>Somme des articles:</span>
+            <span class="total-cost"> <!--Here display the sum of all the articles in cart--> FCFA</span>
+            <span>Le njoh😋:</span>
+            <span class="reduction"> <!-- Here display the amount discounted from total price--> </span>
+            <span>Livraison:</span>
+            <span>1500 FCFA</span>
+          </div>
+          <form action="/caisse" method="post"class="checkout--footer">
+            <label class="price total-cost"><!--Here display the sum of discount, 1500 and some of all the articles in cart--><sup>FCFA</sup></label> 
+            <input type="text" name="products" class="prdt-input" hidden />
+            <button class="checkout-btn">Payer</button>
+          </form>
+        </div>
+      </div>
+</body>
+</html><%- include ("footer.ejs") %>
