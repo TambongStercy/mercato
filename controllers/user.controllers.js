@@ -76,7 +76,7 @@ const getPochette = async (req, res) => {
 
 const getCart = async (req, res) => {
   try {
-    res.render("cart.ejs", { currentPage: "/cart" });
+    res.render("cart.ejs", { currentPage: "/cart"});
   } catch (error) {
     console.log(error);
   }

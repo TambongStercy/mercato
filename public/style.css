@@ -7,13 +7,9 @@
 }
 
 body{
-    height: 310%;
-    width: 100%;
-    color: #F8F8FF;
-    display: flex;
-    flex-direction: column;
-    background-color: #f7f7f7; 
+    display: none;
 }
+
 
 h2{
     color: black;
@@ -25,6 +21,15 @@ h2{
     /* Hiding the PC version */
     #pc{
         display: none;
+    }
+    body{
+        display: block;
+        height: 310%;
+        width: 100%;
+        color: #F8F8FF;
+        display: flex;
+        flex-direction: column;
+        background-color: #f7f7f7; 
     }
     /* End of hiding pc version */
 
@@ -50,9 +55,17 @@ h2{
     .menu a{
         text-decoration: none;
     }
+    .menu button{
+        border: none;
+        background: transparent;
+    }
     .search{
         margin-right: 2%;
         margin-top: 5%;
+    }
+    .search a{
+        text-decoration: none;
+        color: black;
     }
     .top-bar-logo{
         width: 15%;
@@ -172,13 +185,16 @@ h2{
         z-index: 999;
         margin-top: 1.5%;
     }
+    #mobile-nav a{
+        color: white;
+    }
     .navigation{
         position: absolute;
         bottom: 0px;
         width: 100%;
-        /* height: 60px; */
-        background-color: rgb(29, 37, 56);
-        padding: 0.6rem 2rem;
+        height: 55px;
+        background-color: rgba(13, 16, 23,0.9);
+        padding: 0.6rem 0rem;
         display: flex;
         justify-content: space-around;
         border-radius: 3px;
@@ -200,6 +216,7 @@ h2{
         width: 70px;
         /* height: 60px; */
         z-index: 5;
+        
     }
     .navigation ul li a{
         text-decoration: none;
@@ -210,12 +227,18 @@ h2{
         height: 100%;
         width: 100%;
         transition: 0.5s;
+        
+    }
+    .navigation ul li.active a{
+        border: 1px solid white ;
+        border-radius: 30px;
+        width: 160%;
     }
     .navigation ul li a .icon{
         position: relative;
         display: block;
-        width: 55px;
-        height: 55px;
+        width: 30px;
+        height: 40px;
         color: #F8F8FF;
         /* background: white; */
         text-align: center;
@@ -225,11 +248,26 @@ h2{
         transition: 0.5s;
     }
      .navigation ul li.active a .icon{
-        color: #c6c6c6;
         font-weight: 700;
         transform: translateY(-8px );
         transition-delay: 0.25s;
         transition: 0.6s;
+    }
+    .navigation ul li a .text{
+        display: none;
+    }
+    .navigation ul li.active a .text{
+        display: flex;
+        font-size: 15px;
+        justify-content: center;
+        align-items: center;
+        transition: 0.5s;
+        margin-top: 8px;
+    }
+    .ico{
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px;
     }
     .size button{
         border: none;

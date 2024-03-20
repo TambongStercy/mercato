@@ -33,7 +33,7 @@
   <section id="Top-bar">
     <div id="top-bar">
       <div class="menu">
-        <a href="/"><i class="ri-arrow-left-line"></i></a>
+        <button onclick="goBack()"><i class="ri-arrow-left-line"></i></button>
       </div>
       <img src="/assets/logo-no-background.png" alt="Logo de Mercato" class="top-bar-logo">
       <div class="search">
@@ -70,7 +70,7 @@
           <form action="/submitPromo" method="POST" id="promoForm" class="form">
             <input type="text" id="promo" name="promoCode" class="promo-input" placeholder="Ex: Mars08">
               <input type="hidden" id="promoApplied" name="promoApplied" value="false"> 
-              <input type="submit" value="Confirmer😋" class="promo-submit" id="promoSubmit">
+              <input type="submit" value="Confirmer" class="promo-submit" id="promoSubmit">
           </form>
         </div>
       
@@ -79,7 +79,7 @@
           <div class="details">
             <span>Somme des articles:</span>
             <span class="final-cost"> <!--Here display the sum of all the articles in cart--> FCFA</span>
-            <span>Reduction😋:</span>
+            <span>Reduction:</span>
             <span class="reduction"> <!-- Here display the amount discounted from total price--> </span>
             <span>Livraison:</span>
             <span>1500 FCFA</span>
@@ -95,6 +95,9 @@
       
 
       <script>
+         function goBack() {
+            window.history.back();
+          }
 
         const Total = document.querySelector(".total-cost");
         const reductionSpan = document.querySelector(".reduction");
@@ -229,8 +232,13 @@
     
         function updateTotal() {
             let counts = 0;
-    
             cartArea.innerHTML = '';
+            if (items.length == 0){
+                  cartArea.innerHTML += ` <div class="empty-cart"> 
+                    <img src="panier.png">
+                    <h5>Votre panier est vide</h5>
+                    </div> `
+                }
             for (const item of items) {
                 const { prdt, count } = item;
     
@@ -244,11 +252,14 @@
                 } = prdt;
     
                 counts += count * sellingPrice;
-                
-                cartArea.innerHTML +=
+                if (items.length == 0){
+                  cartArea.innerHTML += ` <p>EMPTY CART</p> `
+                  console.log('Vide');
+                }else{
+                  cartArea.innerHTML +=
                     ` <div class="product cart-item">
                         <div class="item-image">
-                            <img src="${imagePath}" alt="Item Image">
+                            <img src="${imagePath}" alt="${name} de taille ${size}">
                         </div>
                         <div class="item-details">
                             <span>${name}</span>
@@ -296,9 +307,15 @@
                         </div>
                         <label class="price small">${sellingPrice} FCFA</label>
                     </div>`;
+                }
+                
             }
-    
-            Total.textContent = ` ${counts+1500}FCFA`;
+            if (items.length == 0){
+              Total.textContent = ` ${counts}FCFA`;
+            }else{
+              Total.textContent = ` ${counts+1500}FCFA`;
+            }
+           
             finalCostSpan.textContent = `${counts}`;
     
             const cartItemsStored = sessionStorage.getItem('shopping-cart');
@@ -333,6 +350,8 @@
     
     </script>
 
-
+<footer>
+  <%- include ('footer.ejs') %>
+</footer>
 </body>
 </html>

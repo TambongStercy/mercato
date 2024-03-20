@@ -4,18 +4,30 @@
         <ul>
             <li class="list <%= currentPage === '/' ? 'active' : '' %>">
                 <a href="/">
-                    <span class="icon"><i class="ri-home-2-line"></i></span>
+                    <div class="ico">
+                        <span class="icon"><i class="fa-solid fa-house"></i></span>
+                        <span class="text">Accueil</span>
+                    </div>
+                    
                 </a>
             </li>
 
             <li class="list <%= currentPage === '/cart' ? 'active' : '' %>">
                 <a href="/cart">
-                    <span class="icon"><i class="ri-shopping-cart-line"></i></span>
+                    <div class="ico">
+                        <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span>
+                        <span class="text">Panier</span>
+                    </div>
+                    
                 </a>
             </li>
             <li class="list <%= currentPage === '/Login' ? 'active' : '' %>">
                 <a href="/user-page">
-                    <span class="icon"><i class="ri-user-line"></i></span>
+                    <div class="ico">
+                        <span class="icon"><i class="fa-regular fa-user"></i></span>
+                        <span class="text">Compte</span>
+                    </div>
+                    
                     <!--If user is logged in, go to user page else ask him to sign in or signup-->
                 </a>
             </li>
@@ -25,4 +37,5 @@
         </ul>
     </div>
 </div>
+<script src="https://kit.fontawesome.com/d8fe6c8092.js" crossorigin="anonymous"></script>
 <!-- mobile nav end -->
