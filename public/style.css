@@ -24,7 +24,7 @@ h2{
     }
     body{
         display: block;
-        height: 310%;
+        height: 100dvh;
         width: 100%;
         color: #F8F8FF;
         display: flex;
