@@ -311,7 +311,7 @@ body{
   padding: 10px;
   gap: 5px;
 }
-.delivery-type form{
+.delivery-type{
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -328,4 +328,5 @@ body{
   margin: 0 auto;
   padding: 10px;
   gap: 5px;
+  width: 100%;
 }
