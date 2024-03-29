@@ -31,6 +31,15 @@ const userSchema = new mongoose.Schema({
   token: {
     type: String,
   },
+  code:{
+    type: String,
+    default: "",
+  },
+  balance:{
+    type: Number,
+    default: 0,
+  },
+  
 });
 
 // Create a User model using the schema
@@ -45,6 +54,26 @@ userSchema.methods.formattedCreatedAt = function () {
 userSchema.methods.comparePassword = function (candidatePassword) {
   return this.password === candidatePassword;
 };
+// Function to increase balance when a promo code is used
+userSchema.statics.increaseBalanceWithPromoCode = async function (user, promoCode, amount) {
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  // Check if the provided promoCode matches with the user's code
+  if (user.code !== promoCode) {
+    throw new Error('Invalid promo code');
+  }
+
+  // Increase the balance
+  user.balance += amount;
+
+  // Save the updated user with increased balance
+  await user.save();
+
+  return user.balance;
+};
+
 
 userSchema.methods.createToken = async function () {
   const token = jwt.sign({ id: this._id, email: this.email }, process.env.JWT_KEY);

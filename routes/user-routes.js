@@ -33,7 +33,8 @@ const {
   flwWebhook,
   testMail,
   getPaymentComplete,
-  applyPromoCode, 
+  applyPromoCode,
+  updateCheckbox,
 } = require("../controllers/user.controllers.js");
 
 router.get("/", getHome);
@@ -45,7 +46,8 @@ router.get("/cart", verifyAuth, getCart);
 router.get("/newarticles", verifyAuth, getNewArticles);
 router.get("/single-product", verifyAuth, getSingleProduct);
 router.get("/user-page", verifyAuth, getUserPage);
-router.post("/submitPromo",applyPromoCode,getCart );
+router.post("/submitPromo",applyPromoCode,getCart);
+router.post("/updateCheckbox",updateCheckbox,getCart);
 
 router.post("/test", (req, res)=>{
   console.log(req)
@@ -64,5 +66,4 @@ router.post("/address", verifyAuth, postAddress);
 router.post("/flw-webhook", flwWebhook);
 router.get("/payment-completed", getPaymentComplete);
 router.get("/test", testMail);
-
 module.exports = router;

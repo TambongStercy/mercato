@@ -40,6 +40,9 @@ const orderSchema = new mongoose.Schema({
     description: { type: String},
     phone: { type: String},
   },
+  promoCode: {
+    type: String,
+  },
   // Add other properties as needed, such as date, status, etc.
 });
 
