@@ -29,7 +29,6 @@ const getHome = async (req, res) => {
   res.render("home.ejs", { currentPage: "/" });
 };
 
-
 const getHomme = async (req, res) => {
   try {
     const regx = { $regex: new RegExp("homme", "i") };
@@ -105,8 +104,6 @@ const getSingleProduct = async (req, res) => {
 const getLogin = async (req, res) => {
   res.render("login.ejs", { currentPage: "/Login" });
 };
-
-
 
 const postLogin = async (req, res) => {
   async function authenticateUser(email, password) {
@@ -334,6 +331,7 @@ const applyPromoCode = async (req, res, next) => {
       
       discount = 1;
       console.log(`Promo code applied successfully. discount ${discount}`);
+      console.log(`The promocode used is ${promoCode}`)
       res.status(200).json({ success: true, message: "Promo code applied successfully." });
     } else {
       // Promo code is invalid or missing
@@ -348,7 +346,7 @@ const applyPromoCode = async (req, res, next) => {
 
 
 const applyDiscount = (totalAmount) => {
-  // Apply a 20% discount (modify this logic as needed)
+  // Apply a 10% discount (modify this logic as needed)
   const discountedAmount = totalAmount * 0.9;
   return Math.ceil(discountedAmount);
 };

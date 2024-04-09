@@ -86,7 +86,7 @@
                 <label for="checkbox2">Livraison a domicile</label>
                 <input type="radio" id="checkbox2" name="checkbox" value="checkbox2">
               </div>
-              <button type="submit" class="promo-submit">Choissir ce mode de livraison</button>
+              <button type="submit" class="promo-submit" id="delivery" onclick="deliveryMode()">Choissir ce mode de livraison</button>
           </form>
           </div>
         </div>
@@ -102,10 +102,10 @@
             <span id="deliveryCost"> FCFA</span>
           </div>
           
-          <form action="/caisse" method="post"class="checkout--footer">
-            <label class="price total-cost"><!--Here display the sum of discount, 1500 and some of all the articles in cart--><sup>FCFA</sup></label> 
+          <form action="/caisse" method="post" class="checkout--footer">
+            <label class="price total-cost"><sup>FCFA</sup></label> 
             <input type="text" name="products" class="prdt-input" hidden />
-            <button class="checkout-btn">Payer</button>
+            <button class="checkout-btn" id="payerButton" onclick="acceptPayment()">Payer</button>
           </form>
         </div>
       </div>
@@ -113,6 +113,7 @@
       
 
       <script>
+        let deliveryModeBool = 0;
         let deliveryPrice = 0;
         document.querySelector(".delivery form").addEventListener("submit", function(event) {
           event.preventDefault(); // Prevent form submission
@@ -120,6 +121,7 @@
           // Get the selected radio button value
           const selectedDeliveryMode = document.querySelector('input[name="checkbox"]:checked').value;
           const deliveryCostSpan = document.getElementById('deliveryCost');
+          const acceptPayment = document.getElementById('payerButton');
           console.log(selectedDeliveryMode);
           if (selectedDeliveryMode === "checkbox1") {
               deliveryPrice = 300;
@@ -153,6 +155,9 @@
                       // You can perform additional actions here if needed
                   } else {
                       // Error handling
+                      payerButton.disabled = true;
+                      alert("Veuillez sélectionner un mode de livraison.");
+                      event.preventDefault();
                       console.error("Error updating checkbox status.");
                   }
               }
@@ -162,6 +167,19 @@
       });
          function goBack() {
             window.history.back();
+          }
+          function deliveryMode(){
+            deliveryModeBool = 1;
+          }
+          function acceptPayment(){
+            const bool = document.getElementById("payerButton");
+            if (deliveryModeBool == 1){
+              bool.disabled = false;
+            } else{
+              bool.disabled = true;
+              alert("Veuillez choisir un type de livraison.");
+              location.reload;
+            }
           }
 
         const Total = document.querySelector(".total-cost");

@@ -43,7 +43,7 @@ const orderSchema = new mongoose.Schema({
   promoCode: {
     type: String,
   },
-  // Add other properties as needed, such as date, status, etc.
+
 });
 
 // Create an Order model using the schema
