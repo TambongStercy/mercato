@@ -42,6 +42,7 @@ const orderSchema = new mongoose.Schema({
   },
   promoCode: {
     type: String,
+    default: "",
   },
 
 });
