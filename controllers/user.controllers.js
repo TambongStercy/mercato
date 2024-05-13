@@ -381,7 +381,7 @@ const postCaisse = async (req, res) => {
     }
 
     const userID = user.id;
-    console.log(req.body.promoCodeStoring);
+    console.log(`Accepted promo code: ${req.body.promoCodeStoring}`);
 
     const prdtsCounts = JSON.parse(req.body.products);
     const promoCode = req.body.promoCodeStoring;
@@ -424,6 +424,7 @@ const postCaisse = async (req, res) => {
     });
 
     await order.save();
+    console.log("order saved", order);
 
     return res.redirect("/address?orderId=" + order.id);
   } catch (error) {

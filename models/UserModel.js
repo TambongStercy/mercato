@@ -66,7 +66,7 @@ userSchema.statics.increaseBalanceWithPromoCode = async function (user, promoCod
 
   // Check if the provided promoCode matches with the user's code
   if (user.code !== promoCode) {
-    throw new Error('Invalid promo code');
+    throw new Error('No user with this promocode');
   }
 
   // Increase the balance
