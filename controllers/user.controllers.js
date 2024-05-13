@@ -318,7 +318,8 @@ const postAddress = async (req, res) => {
 const applyPromoCode = async (req, res, next) => {
   const promoCode = req.body.promoCode;
   const trimCode = promoCode.trim();
-  // const amountToAdd = 5; // Adjust the amount to add as needed
+
+   const amountToAdd = 5; // Adjust the amount to add as needed
 
   try {
     // Get the user from the MongoDB database based on the promo code
@@ -356,10 +357,8 @@ const updateCheckbox = async (req, res) => {
 
   // Perform actions based on the selected radio button
   if (selectedOption === 'checkbox1') {
-      // Action for 'Recuperer en point de retrait'
-      deliveryCost = 300;
+      deliveryCost = 0; //TO-DO: ADD DELIVERY COST
       console.log(`Recuperer en point de retrait selected user will pay ${deliveryCost}FCFA`);
-      // Perform actions specific to 'Recuperer en point de retrait'
   } else if (selectedOption === 'checkbox2') {
       // Action for 'Livraison a domicile'
       deliveryCost = 1500;
@@ -382,8 +381,10 @@ const postCaisse = async (req, res) => {
     }
 
     const userID = user.id;
+    console.log(req.body.promoCodeStoring);
 
     const prdtsCounts = JSON.parse(req.body.products);
+    const promoCode = req.body.promoCodeStoring;
     const products = [];
     let totalAmount = 0;
     let tempPrice = 0;
@@ -419,6 +420,7 @@ const postCaisse = async (req, res) => {
       products: products,
       totalAmount: totalAmount,
       customer: userID,
+      promoCode: promoCode,
     });
 
     await order.save();
@@ -474,7 +476,6 @@ const flwWebhook = async (req, res) => {
     const orderId = payload.data.tx_ref;
     const status = payload.data.status;
     
-
     console.log(payload.data);
     console.log(payload.data.status);
     console.log(payload.data.customer);
@@ -489,6 +490,19 @@ const flwWebhook = async (req, res) => {
       }
       order.paied = true;
       await order.save();
+
+      const promoCode = order.promoCode.trim();
+      const existingUser = await User.findOne({ code: new RegExp(`^${promoCode}`, "i") });
+      let amountToAdd = 5;
+
+    if (existingUser && promoCode !== "") {
+       const newBalance = await User.increaseBalanceWithPromoCode(existingUser, promoCode, amountToAdd); //Increases influencer balance
+      console.log('Balance increased successfully. New balance:', newBalance);
+
+    } else {
+      // Promo code is invalid or missing
+      console.log("An error occured while increasing user balance");
+    }
 
       sendOrderToAdmin(req, order);
     } else if (status === "cancelled") {
@@ -508,12 +522,15 @@ const getPaymentComplete = async (req, res) => {
   res.render("payment-complete.ejs", { currentPage: "/" });
 }
 
+
 const sendOrderToAdmin = async (req,order) => {
   const totalAmount = order.totalAmount;
   const userId = order.customer;
   const products = order.products;
   const address = order.address;
+  const promoCode = order.promoCode;
   let displayAddress = "";
+  paid = 1;
 
   if (address.latitude && address.longitude) {
     displayAddress = `<br/>latitude: ${address.latitude}
@@ -553,8 +570,8 @@ const sendOrderToAdmin = async (req,order) => {
       margin-top: 3%;
       text-align: center;
       border-radius: 15px;">
-          <img src="${url}" alt="Jean en denim" style="width:100%">
-          <h1 style="color: grey;font-size: 12px;">
+          <img src="${url}" alt="${prdtName}" style="width:100%">
+          <h1 style="color: grey;font-size: 12px; font-weight:bold">
               Nom: ${prdtName}
           </h1>
           <h3 style="color: grey;font-size: 10px;">
@@ -571,6 +588,12 @@ const sendOrderToAdmin = async (req,order) => {
           font-size: 10px;
           ">
               Quantité: ${count}
+          </p>
+          <p style="
+          color: grey;
+          font-size: 10px;
+          ">
+              Code promo utilisé: ${promoCode}
           </p>
       </div>
     
@@ -623,37 +646,38 @@ const sendOrderToAdmin = async (req,order) => {
 
 const testMail = async (req, res) => {
 };
-// const increaseBalances = async (req, res, next) => {
-//   const promoCode = req.promo;
-//   console.log(`Influencer promo code: ${promoCode}`);
+const increaseBalances = async (req, order, next) => {
+  const promoCode = req.promo;
+  const totalAmount = order.totalAmount;
+  console.log(`Influencer promo code: ${promoCode}`);
 
-//   console.log(`Paiement status: ${paid}`);
-//   const trimCode = promoCode;
-//   const amountToAdd = 5; // Adjust the amount to add as needed
+  console.log(`Paiement status: ${paid}`);
+  const trimCode = promoCode;
+  const amountToAdd = totalAmount; // Adjust the amount to add as needed
 
-//   try {
-//     // Get the user from the MongoDB database based on the promo code
-//     const existingUser = await User.findOne({ code: new RegExp(`^${trimCode}`, "i") });
+  try {
+    // Get the user from the MongoDB database based on the promo code
+    const existingUser = await User.findOne({ code: new RegExp(`^${trimCode}`, "i") });
 
-//     if (existingUser && promoCode !== "" && paid ==1) {
-//       // Call the method to increase balance with promo code, passing the user object
-//       const newBalance = await User.increaseBalanceWithPromoCode(existingUser, promoCode, amountToAdd); //Increases influencer balance
-//       console.log('Balance increased successfully. New balance:', newBalance);
+    if (existingUser && promoCode !== "" && paid ==1) {
+      // Call the method to increase balance with promo code, passing the user object
+      const newBalance = await User.increaseBalanceWithPromoCode(existingUser, promoCode, amountToAdd); //Increases influencer balance
+      console.log('Balance increased successfully. New balance:', newBalance);
       
-//       discount = 1;
-//       console.log(`user with promocode ${trimCode} has been credited with ${amountToAdd}FCFA.`);
-//       res.status(200).json({ success: true, message: "Balanced Increased" });
-//       next();
-//     } else {
-//       // Promo code is invalid or missing
-//       console.log("Balance did not increase.");
-//       res.status(400).json({ success: false, message: "Balance did not increase." });
-//     }
-//   } catch (error) {
-//     console.error('Error:', error.message);
-//     res.status(500).json({ success: false, message: "Internal server error." });
-//   }
-// };
+      discount = 1;
+      console.log(`user with promocode ${trimCode} has been credited with ${amountToAdd}FCFA.`);
+      res.status(200).json({ success: true, message: "Balanced Increased" });
+      next();
+    } else {
+      // Promo code is invalid or missing
+      console.log("Balance did not increase.");
+      res.status(400).json({ success: false, message: "Balance did not increase." });
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
 
 const verifyAuth = async (req, res, next) => {
   try {

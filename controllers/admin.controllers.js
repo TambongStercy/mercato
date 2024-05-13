@@ -261,11 +261,12 @@ const getmodyfyProduct = async (req, res) => {
 
 const addPromoCode = async (req, res) => {
   try{
-    const { email, code } = req.body;
+    const { email, code, influencer } = req.body;
     console.log(email, code);
     const userPromoCode = await User.findOne({email: new RegExp(`^${email.trim()}`, "i")}) 
     
-    userPromoCode.code = code
+    userPromoCode.code = code;
+    userPromoCode.influencer = influencer;
     await userPromoCode.save();
 
     res.render('admin/promo.ejs', { promo: code });

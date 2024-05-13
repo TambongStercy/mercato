@@ -105,6 +105,7 @@
           <form action="/caisse" method="post" class="checkout--footer">
             <label class="price total-cost"><sup>FCFA</sup></label> 
             <input type="text" name="products" class="prdt-input" hidden />
+            <input type="text" name="promoCodeStoring" id="promoStoring" hidden />
             <button class="checkout-btn" id="payerButton" onclick="acceptPayment()">Payer</button>
           </form>
         </div>
@@ -173,6 +174,8 @@
           }
           function acceptPayment(){
             const bool = document.getElementById("payerButton");
+            const promo_code = document.getElementById("promo");
+            document.getElementById("promoStoring").value = promo_code.value;
             if (deliveryModeBool == 1){
               bool.disabled = false;
             } else{
@@ -180,6 +183,7 @@
               alert("Veuillez choisir un type de livraison.");
               location.reload;
             }
+
           }
 
         const Total = document.querySelector(".total-cost");
