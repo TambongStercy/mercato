@@ -478,13 +478,15 @@ const flwWebhook = async (req, res) => {
     //     res.status(401).end();
     // }
     
-    console.log(payload.data);
-    console.log(payload.data.status);
-    console.log(payload.data.customer);
-
+    
     const payload = req.body;
+    console.log(payload.data);
+    
     const orderId = payload.data.tx_ref;
     const status = payload.data.status;
+    
+    console.log(payload.data.status);
+    console.log(payload.data.customer);
 
     if (status === "successful") {
       console.log("success webhook payment");
