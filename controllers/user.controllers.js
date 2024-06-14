@@ -481,7 +481,8 @@ const flwWebhook = async (req, res) => {
     
     const payload = req.body;
     console.log(payload.data);
-    
+    console.log(payload);
+
     const orderId = payload.data.tx_ref;
     const status = payload.data.status;
     
