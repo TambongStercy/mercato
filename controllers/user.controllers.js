@@ -477,14 +477,14 @@ const flwWebhook = async (req, res) => {
     //     // This request isn't from Flutterwave; discard
     //     res.status(401).end();
     // }
-
-    const payload = req.body;
-    const orderId = payload.data.tx_ref;
-    const status = payload.data.status;
     
     console.log(payload.data);
     console.log(payload.data.status);
     console.log(payload.data.customer);
+
+    const payload = req.body;
+    const orderId = payload.data.tx_ref;
+    const status = payload.data.status;
 
     if (status === "successful") {
       console.log("success webhook payment");
