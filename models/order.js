@@ -40,7 +40,11 @@ const orderSchema = new mongoose.Schema({
     description: { type: String},
     phone: { type: String},
   },
-  // Add other properties as needed, such as date, status, etc.
+  promoCode: {
+    type: String,
+    default: "",
+  },
+
 });
 
 // Create an Order model using the schema

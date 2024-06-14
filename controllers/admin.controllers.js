@@ -1,5 +1,6 @@
 const User = require("../models/UserModel");
 const Product = require("../models/Product");
+const Promo = require("../models/promo");
 const adminToken = require("../models/adminToken");
 const { createUploadFile, downloadFile, deleteDriveFile } = require('../controllers/googledrive.controller')
 const fs = require('fs')
@@ -258,6 +259,25 @@ const getmodyfyProduct = async (req, res) => {
   }
 };
 
+const addPromoCode = async (req, res) => {
+  try{
+    const { email, code, influencer } = req.body;
+    console.log(email, code);
+    const userPromoCode = await User.findOne({email: new RegExp(`^${email.trim()}`, "i")}) 
+    
+    userPromoCode.code = code;
+    userPromoCode.influencer = influencer;
+    await userPromoCode.save();
+
+    res.render('admin/promo.ejs', { promo: code });
+  }catch(error){
+    console.error('Error adding promo code:', error);
+  }
+}
+const promoCode = async (req, res) => {
+  res.render('admin/promo.ejs');
+}
+
 module.exports = {
   getSignup,
   getDashboard,
@@ -273,4 +293,6 @@ module.exports = {
   downloadPrdtDrive,
   deleteProduct,
   modifyProduct,
+  addPromoCode,
+  promoCode,
 };

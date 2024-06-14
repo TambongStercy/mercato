@@ -40,6 +40,8 @@ const {
   deleteProduct,
   modifyProduct,
   getmodyfyProduct,
+  promoCode,
+  addPromoCode,
 } = require("../controllers/admin.controllers");
 
 router.get("/", verifyAdmin, getDashboard);
@@ -54,6 +56,7 @@ router.get("/signin", getSignup);
 router.post("/addproduct", verifyAdmin, upload.single("image"), postProduct);
 router.post("/modifyproduct", verifyAdmin, upload.single("image"), modifyProduct);
 router.get("/delete", verifyAdmin, deleteProduct);
-
+router.post("/addPromo", verifyAdmin, addPromoCode);
+router.get("/promo", verifyAdmin, promoCode);
 
 module.exports = router;

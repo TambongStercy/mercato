@@ -1,13 +1,17 @@
 const User = require("../models/UserModel");
 const Product = require("../models/Product");
 const Order = require("../models/order");
+const Promo = require("../models/promo");
+const cors = require("cors")
 const axios = require("axios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
 const nodemailer = require("nodemailer");
-
+let discount = 0;
+let paid = 0;
+let deliveryCost = 0;
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   secure: false, // use SSL
@@ -74,7 +78,7 @@ const getPochette = async (req, res) => {
 
 const getCart = async (req, res) => {
   try {
-    res.render("cart.ejs", { currentPage: "/cart" });
+    res.render("cart.ejs", { currentPage: "/cart"});
   } catch (error) {
     console.log(error);
   }
@@ -193,7 +197,7 @@ const postSignup = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: "Strict",
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 1 day
           };
 
           console.log("cookie created");
@@ -238,7 +242,6 @@ const postAddress = async (req, res) => {
 
     const user = await User.findOne({ token: token })
 
-
     const order = await Order.findById(orderId);
 
     if (lat && long) {
@@ -270,14 +273,8 @@ const postAddress = async (req, res) => {
     const tx_ref = order.id;
     const total = order.totalAmount;
 
-    // const scretKey = process.env.FLW_TEST_SECRET_KEY; //TEST API KEY
-    const scretKey = process.env.FLW_SECRET_KEY;//REAL API KEY
+    const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
 
-    const options = {
-      headers: { Authorization: `Bearer ${scretKey}` },
-    };
-
-    //where user should be rediected after paiment is made
     const redirectUrl = `${req.protocol}://${req.get('host')}/payment-completed`;
 
     const response = await axios.post(
@@ -287,14 +284,23 @@ const postAddress = async (req, res) => {
         amount: total,
         currency: "XAF",
         redirect_url: redirectUrl,
-        payment_options: "mobilemoneyghana, mobilemoneyfranco, card",
+        payment_options: "mobilemoneyghana, mobilemoneyfranco, card, ussd",
         customer: {
           email: useremail,
           phonenumber: userphone,
           name: username,
         },
+        customizations: {
+          title: "Mercato",
+          logo: "public/assets/logo-no-background.png",
+          description: "Nous vous remercions d'avoir choisi MERCATO pour vos achats. Nous sommes impatients de vous revoir très bientôt pour de nouvelles découvertes.",
+        }
       },
-      options
+      {
+        headers: {
+          "Authorization": `Bearer ${FLW_SECRET_KEY}`
+        }
+      }
     );
 
     const data = response.data.data;
@@ -309,20 +315,79 @@ const postAddress = async (req, res) => {
   }
 };
 
+const applyPromoCode = async (req, res, next) => {
+  const promoCode = req.body.promoCode;
+  const trimCode = promoCode.trim();
+
+   const amountToAdd = 5; // Adjust the amount to add as needed
+
+  try {
+    // Get the user from the MongoDB database based on the promo code
+    const existingUser = await User.findOne({ code: new RegExp(`^${trimCode}`, "i") });
+
+    if (existingUser && promoCode !== "") {
+      // Call the method to increase balance with promo code, passing the user object
+      // const newBalance = await User.increaseBalanceWithPromoCode(existingUser, promoCode, amountToAdd); //Increases influencer balance
+      // console.log('Balance increased successfully. New balance:', newBalance);
+      
+      discount = 1;
+      console.log(`Promo code applied successfully. discount ${discount}`);
+      console.log(`The promocode used is ${promoCode}`)
+      res.status(200).json({ success: true, message: "Promo code applied successfully." });
+    } else {
+      // Promo code is invalid or missing
+      console.log("Invalid promo code or user not found.");
+      res.status(400).json({ success: false, message: "Invalid promo code or user not found." });
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
+
+
+const applyDiscount = (totalAmount) => {
+  // Apply a 10% discount (modify this logic as needed)
+  const discountedAmount = totalAmount * 0.9;
+  return Math.ceil(discountedAmount);
+};
+
+const updateCheckbox = async (req, res) => {
+  const selectedOption = req.body.checkbox;
+
+  // Perform actions based on the selected radio button
+  if (selectedOption === 'checkbox1') {
+      deliveryCost = 0; //TO-DO: ADD DELIVERY COST
+      console.log(`Recuperer en point de retrait selected user will pay ${deliveryCost}FCFA`);
+  } else if (selectedOption === 'checkbox2') {
+      // Action for 'Livraison a domicile'
+      deliveryCost = 1500;
+      console.log(`Livraison a domicile selected user will pay ${deliveryCost}FCFA`);
+      // Perform actions specific to 'Livraison a domicile'
+  }
+
+  // Respond to the client
+  res.status(201).json({ success: true, message: "Mode de livraison sélectionné avec succès." });
+};
+
+
 const postCaisse = async (req, res) => {
   try {
-
     const token = req.cookies.authToken;
+    const user = await User.findOne({ token: token });
 
-    const user = await User.findOne({ token: token })
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
-    const userID = user.id; // Using optional chaining
+    const userID = user.id;
+    console.log(`Accepted promo code: ${req.body.promoCodeStoring}`);
 
     const prdtsCounts = JSON.parse(req.body.products);
-
+    const promoCode = req.body.promoCodeStoring;
     const products = [];
-
-    let totalAmount = 1500;
+    let totalAmount = 0;
+    let tempPrice = 0;
 
     for (const IdAndCount of prdtsCounts) {
       const prdtId = IdAndCount.prdt.id;
@@ -331,29 +396,61 @@ const postCaisse = async (req, res) => {
       const product = await Product.findById(prdtId);
 
       if (!product) {
-        continue
+        continue;
       }
 
       products.push({ prdtId: prdtId, count: prdtCount, size: size });
 
       totalAmount += prdtCount * product.sellingPrice;
+      tempPrice = totalAmount;
+      req.storePrice = totalAmount;
+    }
+    if(discount === 1){
+      totalAmount = applyDiscount(totalAmount)+deliveryCost; 
+      console.log(`New price with discount and delivery: ${totalAmount}`);
+      console.log(`New price with discount: ${totalAmount-deliveryCost}`);
+      console.log(`Old price without discount: ${tempPrice}`);
+      console.log(`delivery cost: ${deliveryCost}`)
+      console.log(`Amount for influencer ${(req.storePrice)*0.1}`);
+    }else{
+      totalAmount = totalAmount+deliveryCost;
+      console.log("No discount");
     }
 
     const order = Order({
       products: products,
       totalAmount: totalAmount,
       customer: userID,
+      promoCode: promoCode,
     });
 
     await order.save();
+    console.log("order saved", order);
 
     return res.redirect("/address?orderId=" + order.id);
   } catch (error) {
     console.log("error: " + error);
-
-    res.status(500).json({ message: "an error occured pls try again later" });
+    res.status(500).json({ message: "An error occurred, please try again later" });
   }
 };
+// const increaseBalance = async (req, res) => {
+//   const promoCode = req.body.promoCode;
+//   const trimCode = promoCode.trim();
+//   const existingUser = await User.findOne({ code: new RegExp(`^${trimCode}`, "i") });
+//   let influencerRevenue = req.storePrice;
+//   let amountToAdd = (influencerRevenue * 0.1)+2500;
+//   if (existingUser && promoCode !== "") {
+//     try {
+//       const newBalance = await User.increaseBalanceWithPromoCode(existingUser, promoCode, amountToAdd); //Increases influencer balance
+//       console.log('Balance increased successfully. New balance:', newBalance);
+//       console.log(`Influencer with promocode ${trimCode} has been credited with ${amountToAdd}FCFA.`);
+//     } catch (error) {
+//       console.error('Error:', error.message);
+//     }
+//   }else{
+//     console.log(`Influencer with promocode ${trimCode} not found. No balance increase was made.`);
+//   }
+// };
 
 
 const getLogout = async (req, res) => {
@@ -384,7 +481,7 @@ const flwWebhook = async (req, res) => {
     const payload = req.body;
     const orderId = payload.data.tx_ref;
     const status = payload.data.status;
-
+    
     console.log(payload.data);
     console.log(payload.data.status);
     console.log(payload.data.customer);
@@ -393,14 +490,29 @@ const flwWebhook = async (req, res) => {
       console.log("success webhook payment");
 
       const order = await Order.findById(orderId);
+      paid =1;
       if (!order) {
         return res.status(400).json({ message: 'No order with this ID' })
       }
       order.paied = true;
       await order.save();
 
+      const promoCode = order.promoCode.trim();
+      const existingUser = await User.findOne({ code: new RegExp(`^${promoCode}`, "i") });
+      let amountToAdd = 5;
+
+    if (existingUser && promoCode !== "") {
+       const newBalance = await User.increaseBalanceWithPromoCode(existingUser, promoCode, amountToAdd); //Increases influencer balance
+      console.log('Balance increased successfully. New balance:', newBalance);
+
+    } else {
+      // Promo code is invalid or missing
+      console.log("An error occured while increasing user balance");
+    }
+
       sendOrderToAdmin(req, order);
-    } else if (status === "failed") {
+    } else if (status === "cancelled") {
+      paid = 1;
       console.log("failed webhook payment");
     } else {
       console.log("failed with status: " + status);
@@ -416,12 +528,14 @@ const getPaymentComplete = async (req, res) => {
   res.render("payment-complete.ejs", { currentPage: "/" });
 }
 
-const sendOrderToAdmin = async (req, order) => {
+const sendOrderToAdmin = async (req,order) => {
   const totalAmount = order.totalAmount;
   const userId = order.customer;
   const products = order.products;
   const address = order.address;
+  const promoCode = order.promoCode;
   let displayAddress = "";
+  paid = 1;
 
   if (address.latitude && address.longitude) {
     displayAddress = `<br/>latitude: ${address.latitude}
@@ -461,8 +575,8 @@ const sendOrderToAdmin = async (req, order) => {
       margin-top: 3%;
       text-align: center;
       border-radius: 15px;">
-          <img src="${url}" alt="Jean en denim" style="width:100%">
-          <h1 style="color: grey;font-size: 12px;">
+          <img src="${url}" alt="${prdtName}" style="width:100%">
+          <h1 style="color: grey;font-size: 12px; font-weight:bold">
               Nom: ${prdtName}
           </h1>
           <h3 style="color: grey;font-size: 10px;">
@@ -479,6 +593,12 @@ const sendOrderToAdmin = async (req, order) => {
           font-size: 10px;
           ">
               Quantité: ${count}
+          </p>
+          <p style="
+          color: grey;
+          font-size: 10px;
+          ">
+              Code promo utilisé: ${promoCode}
           </p>
       </div>
     
@@ -519,7 +639,7 @@ const sendOrderToAdmin = async (req, order) => {
       <hr style="border:none;border-top:1px solid #eee" />
       <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
         <p>Mercato Buisness Inc</p>
-        <p>Developer par Simbtech,<br /> copyright ©</p>
+        <p>Developed by Simbtech,<br /> copyright ©</p>
         <p>Cameroun-Yaoundé</p>
       </div>
     </div>
@@ -530,6 +650,38 @@ const sendOrderToAdmin = async (req, order) => {
 };
 
 const testMail = async (req, res) => {
+};
+const increaseBalances = async (req, order, next) => {
+  const promoCode = req.promo;
+  const totalAmount = order.totalAmount;
+  console.log(`Influencer promo code: ${promoCode}`);
+
+  console.log(`Paiement status: ${paid}`);
+  const trimCode = promoCode;
+  const amountToAdd = totalAmount; // Adjust the amount to add as needed
+
+  try {
+    // Get the user from the MongoDB database based on the promo code
+    const existingUser = await User.findOne({ code: new RegExp(`^${trimCode}`, "i") });
+
+    if (existingUser && promoCode !== "" && paid ==1) {
+      // Call the method to increase balance with promo code, passing the user object
+      const newBalance = await User.increaseBalanceWithPromoCode(existingUser, promoCode, amountToAdd); //Increases influencer balance
+      console.log('Balance increased successfully. New balance:', newBalance);
+      
+      discount = 1;
+      console.log(`user with promocode ${trimCode} has been credited with ${amountToAdd}FCFA.`);
+      res.status(200).json({ success: true, message: "Balanced Increased" });
+      next();
+    } else {
+      // Promo code is invalid or missing
+      console.log("Balance did not increase.");
+      res.status(400).json({ success: false, message: "Balance did not increase." });
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
 };
 
 const verifyAuth = async (req, res, next) => {
@@ -570,6 +722,7 @@ module.exports = {
   getCart,
   getNewArticles,
   getSingleProduct,
+  applyPromoCode,
   getLogin,
   postLogin,
   getSignup,
@@ -583,4 +736,5 @@ module.exports = {
   flwWebhook,
   testMail,
   getPaymentComplete,
+  updateCheckbox
 };

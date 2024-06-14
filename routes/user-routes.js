@@ -33,17 +33,26 @@ const {
   flwWebhook,
   testMail,
   getPaymentComplete,
+  applyPromoCode,
+  updateCheckbox,
 } = require("../controllers/user.controllers.js");
 
-router.get("/", verifyAuth, getHome);
-router.get("/homme", verifyAuth, getHomme);
-router.get("/femme", verifyAuth, getFemme);
-router.get("/accessoires", verifyAuth, getAccessoires);
-router.get("/pochette", verifyAuth, getPochette);
+router.get("/", getHome);
+router.get("/homme", getHomme);
+router.get("/femme", getFemme);
+router.get("/accessoires", getAccessoires);
+router.get("/pochette", getPochette);
 router.get("/cart", verifyAuth, getCart);
 router.get("/newarticles", verifyAuth, getNewArticles);
 router.get("/single-product", verifyAuth, getSingleProduct);
 router.get("/user-page", verifyAuth, getUserPage);
+router.post("/submitPromo",applyPromoCode,getCart);
+router.post("/updateCheckbox",updateCheckbox,getCart);
+
+router.post("/test", (req, res)=>{
+  console.log(req)
+  res.status(200).json({message: "OK"})
+});
 
 router.get("/login", getLogin);
 router.post("/login", postLogin);
@@ -57,5 +66,4 @@ router.post("/address", verifyAuth, postAddress);
 router.post("/flw-webhook", flwWebhook);
 router.get("/payment-completed", getPaymentComplete);
 router.get("/test", testMail);
-
 module.exports = router;

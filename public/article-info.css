@@ -245,3 +245,14 @@
     color: #f8f8ff;
     text-decoration: none;
    }
+
+   .number-in-cart{
+    background-color: black;
+    border: none;
+    border-radius: 50%;
+    padding: 1px 4px;
+    position: relative;
+    font-size: 125%;
+    color: white;
+    top: -0.5em;
+   }

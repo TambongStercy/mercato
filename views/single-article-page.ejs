@@ -99,12 +99,12 @@
             <h5>Tailles</h5>
 
             <% for(const size of product.size.split(',')){ %>
-                <a href="#" class="btn" onclick="changeSize('<%= size %>')"> <span class="taille">
+                <button class="btn" onclick="changeSize('<%= size %>')"> <span class="taille">
                         <%= size %>
-                    </span></a>
+                    </span></button>
                 <% }%>
                     <div class="delivery">
-                        <h5>Livraison au cameroun</h5>
+                        <h5>Livraison au Cameroun</h5>
                         <p class="livraison"><i class="ri-truck-line"><span class="politique-livraison"> Politique de
                                     livraison</span></i></p>
                         <div class="politique">
@@ -117,13 +117,7 @@
                         <br>
                         <p class="livraison"><i class="ri-swap-2-line"></i><span class="politique-livraison"> Politique
                                 de retour</span></i></p>
-                        <div class="politique">
-                            <ul class="info">
-                                <li>Donner une raison de retour</li>
-                                <li>Retour sous 72 heures</li>
-                                <li>L'article doit etre un etat</li>
-                            </ul>
-                        </div>
+                        
                     </div>
                     <!-- <div class="comments">
                         <h4>Ajoutez un avis</h4>
@@ -159,7 +153,7 @@
 
             function changeSize(selSize) {
                 const button = document.getElementById('button');
-                button.innerHTML = 'Ajoutez au panier | <i class="ri-shopping-cart-2-fill"></i>'
+                button.innerHTML = 'Ajouter au panier | <i class="ri-shopping-cart-2-fill"></i>'
                 size = selSize;
             }
 
@@ -198,8 +192,8 @@
             }
 
             function cartValue(length) {
-                document.getElementById('cart-num').innerHTML = `<i class="ri-shopping-cart-2-line"></i>${length}`;
-                console.log('Pk')
+                document.getElementById('cart-num').innerHTML = `<i class="ri-shopping-cart-2-line"></i><sup><span class="number-in-cart">${length}<span><sup>`;
+                console.log('Ok')
             }
 
             cartValue(aray.length)

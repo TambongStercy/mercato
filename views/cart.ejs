@@ -30,37 +30,10 @@
 
 <body>
 
-  <script>
-
-    let cartItems = [];
-
-    let cartArray = sessionStorage.getItem('shopping-cart') ? JSON.parse(sessionStorage.getItem('shopping-cart')) : [];
-
-
-    const items = [];
-
-    for (const prdt of cartArray) {
-      const { id, size } = prdt;
-
-      if (cartItems.some((itm) => itm.id == id && itm.size == size)) {
-        items[(items.findIndex(({ prdt }) => prdt.id == id && prdt.size == size))].count++;
-        // continue;  
-      } else {
-        items.push({
-          prdt: prdt,
-          count: 1
-        });
-        cartItems.push(prdt)
-      }
-
-    }
-
-  </script>
-
   <section id="Top-bar">
     <div id="top-bar">
       <div class="menu">
-        <a href="/"><i class="ri-menu-2-line"></i></a>
+        <button onclick="goBack()"><i class="ri-arrow-left-line"></i></button>
       </div>
       <img src="/assets/logo-no-background.png" alt="Logo de Mercato" class="top-bar-logo">
       <div class="search">
@@ -68,171 +41,410 @@
       </div>
     </div>
   </section>
-  <main>
-    <div class="container">
-      <div class="cart-items">
+  <body>
+    <div class="master-container">
+        <div class="card cart">
+          <label class="title">Votre Panier</label>
+          <div class="products">
+            <div class="product cart-item">
+                <div class="item-image">
+                    <img src="${imagePath}" alt="Item Image"> <!--Make sur this image has a small size--> 
+                </div>
+              <div class="item-details">
+                <span>${name}</span>
+                <p>Taille Choisi: ${size}</p>
+                <button class="remove-btn" onclick="removeItem('${id},${size}')"><i class="ri-close-fill"></i></button>
+              </div>
+              <div class="quantity">
+                
+                <input type="number" class="item-quantity" value="${count}" min="0" onchange="onChange(event)" id="${id},${size}">
+                
+              </div>
+              <label class="price small">${sellingPrice} FCFA</label>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card coupons">
+          <label class="title">Code promo</label>
+            <form action="/submitPromo" method="POST" id="promoForm" class="form">
+              <input type="text" id="promo" name="promoCode" class="promo-input" placeholder="Ex: Mars08">
+                <input type="hidden" id="promoApplied" name="promoApplied" value="false"> 
+                <input type="submit" value="Confirmer" class="promo-submit" id="promoSubmit">
+            </form>
+        </div>
 
+        <div class="card coupons">
+          <label class="title">Type de livraison</label>
+          <div class="delivery">
+            <form action="/updateCheckbox" method="post" >
+              <div class="delivery-type">
+                <label for="checkbox1">Recuperer en point de retrait</label>
+                <input type="radio" id="checkbox1" name="checkbox" value="checkbox1" checked>
+              </div>
+              <div class="delivery-type">
+                <label for="checkbox2">Livraison a domicile</label>
+                <input type="radio" id="checkbox2" name="checkbox" value="checkbox2">
+              </div>
+              <button type="submit" class="promo-submit" id="delivery" onclick="deliveryMode()">Choisir ce mode de livraison</button>
+          </form>
+          </div>
+        </div>
+      
+        <div class="card checkout">
+          <label class="title">Sommaire</label>
+          <div class="details">
+            <span>Somme des articles:</span>
+            <span class="final-cost"> <!--Here display the sum of all the articles in cart--> FCFA</span>
+            <span>Reduction:</span>
+            <span class="reduction"> <!-- Here display the amount discounted from total price--> </span>
+            <span>Livraison:</span>
+            <span id="deliveryCost"> FCFA</span>
+          </div>
+          
+          <form action="/caisse" method="post" class="checkout--footer">
+            <label class="price total-cost"><sup>FCFA</sup></label> 
+            <input type="text" name="products" class="prdt-input" hidden />
+            <input type="text" name="promoCodeStoring" id="promoStoring" hidden />
+            <button class="checkout-btn" id="payerButton" onclick="acceptPayment()">Payer</button>
+          </form>
+        </div>
       </div>
 
-      <div class="total-cost">
-        Total : 0 Frs <!-- Calculate total dynamically using JavaScript -->
-      </div>
+      
 
-      <form action="/caisse" method="post">
-        <input type="text" name="products" class="prdt-input" hidden />
-        <button class="checkout-btn">Passer à la caisse</button>
-      </form>
-      <!--This button leads to flutterwave checkout page and if paiement is confirmed, the user is redirected to paiement complete page-->
-    </div>
-  </main>
+      <script>
+        let deliveryModeBool = 0;
+        let deliveryPrice = 0;
+        document.querySelector(".delivery form").addEventListener("submit", function(event) {
+          event.preventDefault(); // Prevent form submission
 
-  <script>
-
-    const Total = document.querySelector(".total-cost");
-    const cartArea = document.querySelector(".cart-items");
-
-
-    function onChange(e) {
-      const nVal = e.srcElement.value;
-      const idSize = e.srcElement.id;
-      const id = idSize.split(',')[0]
-      const size = idSize.split(',')[1]
-
-
-      // item = items.find(({prdt})=>{
-      //   return (id == prdt.id && size == prdt.size)
-      // })
-
-
-      items.forEach(({
-        prdt,
-        count
-      }, index) => {
-
-        const sellingPrice = prdt.sellingPrice;
-        if (id == prdt.id && size == prdt.size) {
-
-          if (nVal > count) {
-            console.log('incrementing')
-            // If javascript shopping cart session is not empty
-            if (!cartArray) {
-              cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
-            }
-            //add item id to array
-            cartArray.push(prdt);
-
-            const cartJSON = JSON.stringify(cartArray);
-            sessionStorage.setItem('shopping-cart', cartJSON);
-          } else if (nVal < count) {
-            console.log('decrementing')
-
-            // If javascript shopping cart session is not empty
-            if (!cartArray) {
-              cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
-            }
-
-
-            //remove element once if present
-            cartArray.splice(cartArray.findIndex(itm => itm.id == id && itm.size == size), 1)
-
-            const cartJSON = JSON.stringify(cartArray);
-            sessionStorage.setItem('shopping-cart', cartJSON);
-
-
-          } else {
-            console.log('nothing')
+          // Get the selected radio button value
+          const selectedDeliveryMode = document.querySelector('input[name="checkbox"]:checked').value;
+          const deliveryCostSpan = document.getElementById('deliveryCost');
+          const acceptPayment = document.getElementById('payerButton');
+          console.log(selectedDeliveryMode);
+          if (selectedDeliveryMode === "checkbox1") {
+              deliveryPrice = 300;
+              updateTotal();
+              deliveryCostSpan.textContent = `${deliveryPrice} FCFA`;
+              console.log(deliveryPrice);
+          } else if (selectedDeliveryMode === "checkbox2") {
+              deliveryPrice = 1500;
+              updateTotal();
+              deliveryCostSpan.textContent = `${deliveryPrice} FCFA`;
+              console.log(deliveryPrice);
+          }else{
+            console.log("error");
           }
 
+          // Create an object to hold the form data
+          const formData = {
+              checkbox: selectedDeliveryMode
+          };
 
-          items[index].count = nVal;
+          // Send form data to the backend using AJAX
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", "/updateCheckbox", true);
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.onreadystatechange = function() {
+              if (xhr.readyState === XMLHttpRequest.DONE) {
+                  if (xhr.status === 201) {
+                      // Success handling
+                      const response = JSON.parse(xhr.responseText);
+                      console.log(response.message); // Log success message
+                      // You can perform additional actions here if needed
+                  } else {
+                      // Error handling
+                      payerButton.disabled = true;
+                      alert("Veuillez sélectionner un mode de livraison.");
+                      event.preventDefault();
+                      console.error("Error updating checkbox status.");
+                  }
+              }
+          };
+          // Convert form data to JSON and send it
+          xhr.send(JSON.stringify(formData));
+      });
+         function goBack() {
+            window.history.back();
+          }
+          function deliveryMode(){
+            deliveryModeBool = 1;
+          }
+          function acceptPayment(){
+            const bool = document.getElementById("payerButton");
+            const promo_code = document.getElementById("promo");
+            document.getElementById("promoStoring").value = promo_code.value;
+            if (deliveryModeBool == 1){
+              bool.disabled = false;
+            } else{
+              bool.disabled = true;
+              alert("Veuillez choisir un type de livraison.");
+              location.reload;
+            }
 
-        }
+          }
 
-
-
-      })
-
-      updateTotal()
-    }
-
-    function updateTotal() {
-
-      let counts = 0;
-
-      cartArea.innerHTML = '';
-      for (const item of items) {
-        const { prdt, count } = item;
+        const Total = document.querySelector(".total-cost");
         
-        const {
-          name,
-          sellingPrice,
-          id,
-          size,
-          stock,
-          imagePath,
-        } = prdt;
+        const finalCostSpan = document.querySelector(".final-cost");
+        const cartArea = document.querySelector(".products"); // Selecting the cart items container
+    
+        let cartItems = [];
+    
+        let cartArray = sessionStorage.getItem('shopping-cart') ? JSON.parse(sessionStorage.getItem('shopping-cart')) : [];
+    
+        const items = [];
+    
+        for (const prdt of cartArray) {
+            const { id, size } = prdt;
+    
+            if (cartItems.some((itm) => itm.id == id && itm.size == size)) {
+                items[(items.findIndex(({ prdt }) => prdt.id == id && prdt.size == size))].count++;
+            } else {
+                items.push({
+                    prdt: prdt,
+                    count: 1
+                });
+                cartItems.push(prdt)
+            }
+    
+        }
+    
+        // Add event listener to the promo code form submission
+        document.getElementById("promoForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+    
+            // Get the promo code entered by the user
+            const promoCode = document.getElementById("promo").value.trim().toLowerCase();
+            console.log(promoCode);
+    
+            // Create an object to hold the form data
+            const formData = {
+                promoCode: promoCode,
+            };
+            let counter = 0;
+    
+            // Send form data to the backend using AJAX
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/submitPromo", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Success handling
+                        const response = JSON.parse(xhr.responseText);
+                        counter +=1;
+                        console.log(counter)
+                        // Apply discount logic if promo code is valid
+                        if (response.success && counter === 1) {
+                          
+                            items.forEach(item => {
+                              item.prdt.sellingPrice = Math.ceil(item.prdt.sellingPrice * 0.9); //Applying discount of 10%
+                            });
+                            // Update the total after applying the discount
+                            updateTotal();
+                            // Set the value of hidden field to indicate promo code applied
+                            document.getElementById("promoApplied").value = "true";
+                            // Disable the submit button
+                            document.getElementById("promoSubmit").disabled = true;
+                            // Display success message
+                            alert("-10% sur ton panier😱. Ash le goût du njohh ci🤤.");
+   
+                        } else {
+                            // Display error message if promo code is invalid
+                            alert("Tu n'as pas le bon njohh😔!");
+                        }
+                    } else {
+                        // Error handling
+                        alert("Tu n'as pas le bon njohh😔!");
+                        console.error("Error submitting form data.");
+                    }
+                }
+            };
+            // Convert form data to JSON and send it
+            xhr.send(JSON.stringify(formData));
+        });
 
-        counts += count * sellingPrice;
+        
+              function onChange(e) {
+                  const nVal = e.srcElement.value;
+                  const idSize = e.srcElement.id;
+                  const id = idSize.split(',')[0]
+                  const size = idSize.split(',')[1]
+          
+                  items.forEach(({
+                      prdt,
+                      count
+                  }, index) => {
+          
+                      const sellingPrice = prdt.sellingPrice;
+                      if (id == prdt.id && size == prdt.size) {
+          
+                          if (nVal > count) {
+                              console.log('incrementing')
+                              // If javascript shopping cart session is not empty
+                              if (!cartArray) {
+                                  cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+                              }
+                              //add item id to array
+                              cartArray.push(prdt);
+          
+                              const cartJSON = JSON.stringify(cartArray);
+                              sessionStorage.setItem('shopping-cart', cartJSON);
+                          } else if (nVal < count) {
+                              console.log('decrementing')
+          
+                              // If javascript shopping cart session is not empty
+                              if (!cartArray) {
+                                  cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+                              }
+          
+                              //remove element once if present
+                              cartArray.splice(cartArray.findIndex(itm => itm.id == id && itm.size == size), 1)
+          
+                              const cartJSON = JSON.stringify(cartArray);
+                              sessionStorage.setItem('shopping-cart', cartJSON);
+          
+                          } else {
+                              console.log('nothing')
+                          }
+          
+                          items[index].count = nVal;
+                      }
+                  });
+          
+                  updateTotal()
+              }
+          
+              function updateTotal() {
+                const reductionSpan = document.querySelector(".reduction");
+                  let counts = 0;
+                  cartArea.innerHTML = '';
+                  if (items.length == 0){
+                        cartArea.innerHTML += ` <div class="empty-cart"> 
+                          <img src="panier.png">
+                          <h5>Votre panier est vide</h5>
+                          </div> `
+                      }
+                  for (const item of items) {
+                      const { prdt, count } = item;
+          
+                      const {
+                          name,
+                          sellingPrice,
+                          id,
+                          size,
+                          stock,
+                          imagePath,
+                      } = prdt;
+          
+                      counts += count * sellingPrice;
+                      if (items.length == 0){
+                        cartArea.innerHTML += ` <p>EMPTY CART</p> `
+                        console.log('Vide');
+                      }else{
+                        cartArea.innerHTML +=
+                          ` <div class="product cart-item">
+                              <div class="item-image">
+                                  <img src="${imagePath}" alt="${name} de taille ${size}">
+                              </div>
+                              <div class="item-details">
+                                  <span>${name}</span>
+                                  <p>Taille Choisi: ${size}</p>
+                                  <button class="remove-btn" onclick="removeItem('${id},${size}')"><svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 69 14"
+          class="svgIcon bin-top"
+        >
+          <g clip-path="url(#clip0_35_24)">
+            <path
+              fill="black"
+              d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"
+            ></path>
+          </g>
+          <defs>
+            <clipPath id="clip0_35_24">
+              <rect fill="white" height="14" width="69"></rect>
+            </clipPath>
+          </defs>
+        </svg>
 
-        cartArea.innerHTML +=
-          `<div class="cart-item">
-          <div class="item-image">
-            <img src="${imagePath}" alt="Item Image">
-          </div>
-          <div class="item-details">
-            <h2>${name}</h2>
-            <p>Taille Choisi: ${size}</p>
-            <p>Prix: ${sellingPrice} FCFA</p>
-          </div>
-          <div class="item-actions">
-            <input type="number" class="item-quantity" value="${count}" min="0" onchange="onChange(event)" id="${id},${size}">
-            <button class="remove-btn" onclick="removeItem('${id},${size}')"><i class="ri-close-fill"></i></button>
-          </div>`;
-      }
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 69 57"
+          class="svgIcon bin-bottom"
+        >
+          <g clip-path="url(#clip0_35_22)">
+            <path
+              fill="black"
+              d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"
+            ></path>
+          </g>
+          <defs>
+            <clipPath id="clip0_35_22">
+              <rect fill="white" height="57" width="69"></rect>
+            </clipPath>
+          </defs>
+        </svg></button>
+                              </div>
+                              <div class="quantity">
+                                  <input type="number" class="item-quantity" value="${count}" min="0" onchange="onChange(event)" id="${id},${size}">
+                              </div>
+                              <label class="price small">${sellingPrice} FCFA</label>
+                          </div>`;
+                      }
+                      
+                  }
+                  if (items.length == 0){
+                    Total.textContent = ` ${counts}FCFA`;
+                  }else{
+                    Total.textContent = ` ${counts+deliveryPrice}FCFA`;
+                    console.log(`delivery price : ${deliveryPrice}`)
+                  }
+                
+                  finalCostSpan.textContent = `${counts} FCFA`;
+          
+                  const cartItemsStored = sessionStorage.getItem('shopping-cart');
+          
+                  if (cartItemsStored) {
+                      document.querySelector('.prdt-input').value = JSON.stringify(items);
+                  }
+                  reductionSpan.textContent = `-${counts*0.1} FCFA`; 
+              }
+          
+              function removeItem(idSize) {
+                  const id = idSize.split(',')[0]
+                  const size = idSize.split(',')[1]
+          
+                  if (!cartArray) {
+                      cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+                  }
+          
+                  cartArray = cartArray.filter(elem => elem.id != id || elem.size != size)
+                  cartItems = cartItems.filter(elem => elem.id != id || elem.size != size)
+          
+                  const cartJSON = JSON.stringify(cartArray);
+                  sessionStorage.setItem('shopping-cart', cartJSON);
+          
+                  const index = items.findIndex(({ prdt }) => prdt.id == id && prdt.size == size)
+          
+                  items.splice(index, 1);
+          
+                  updateTotal()
+              }
+          
+              updateTotal()
 
-
-      Total.textContent = `Total(Livraison incluse): ${counts + 1500}FCFA`;
-
-      const cartItemsStored = sessionStorage.getItem('shopping-cart');
-
-      if (cartItemsStored) {
-        document.querySelector('.prdt-input').value = JSON.stringify(items);
-      }
-
-    }
-
-    function removeItem(idSize) {
-      const id = idSize.split(',')[0]
-      const size = idSize.split(',')[1]
-
-
-      if (!cartArray) {
-        cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
-      }
-
-      cartArray = cartArray.filter(elem => elem.id != id || elem.size != size)
-      cartItems = cartItems.filter(elem => elem.id != id || elem.size != size)
-
-      const cartJSON = JSON.stringify(cartArray);
-      sessionStorage.setItem('shopping-cart', cartJSON);
-
-      const index = items.findIndex(({ prdt }) => prdt.id == id && prdt.size == size)
-      
-      items.splice(index, 1);
-
-      updateTotal()
-    }
-
-    updateTotal()
-
+          
 
   </script>
 
-  <footer>
-
-    <%- include ("footer.ejs") %>
-  </footer>
-
+<footer>
+  <%- include ('footer.ejs') %>
+</footer>
 </body>
-
 </html>
