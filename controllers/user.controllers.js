@@ -334,7 +334,7 @@ const postCaisse = async (req, res) => {
         continue
       }
 
-      products.push({ prdtId: prdtId, count: prdtCount, size: size});
+      products.push({ prdtId: prdtId, count: prdtCount, size: size });
 
       totalAmount += prdtCount * product.sellingPrice;
     }
@@ -357,14 +357,18 @@ const postCaisse = async (req, res) => {
 
 
 const getLogout = async (req, res) => {
-  const token = req.cookies.authToken;
+  try {
+    const token = req.cookies.authToken;
 
-  const user = await User.findOne({ token: token });
+    const user = await User.findOne({ token: token });
 
-  await user.deleteToken();
-  res.clearCookie("authToken");
+    await user.deleteToken();
+    res.clearCookie("authToken");
 
-  res.redirect("/login", { currentPage: "/Login" });
+    res.redirect("/login", { currentPage: "/Login" });
+  } catch (error) {
+    res.send(error)
+  }
 };
 
 const flwWebhook = async (req, res) => {
@@ -412,7 +416,7 @@ const getPaymentComplete = async (req, res) => {
   res.render("payment-complete.ejs", { currentPage: "/" });
 }
 
-const sendOrderToAdmin = async (req,order) => {
+const sendOrderToAdmin = async (req, order) => {
   const totalAmount = order.totalAmount;
   const userId = order.customer;
   const products = order.products;
