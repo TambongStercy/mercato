@@ -37,6 +37,7 @@ const {
   updateCheckbox,
 } = require("../controllers/user.controllers.js");
 
+
 router.get("/", getHome);
 router.get("/homme", getHomme);
 router.get("/femme", getFemme);
@@ -66,4 +67,6 @@ router.post("/address", verifyAuth, postAddress);
 router.post("/flw-webhook", flwWebhook);
 router.get("/payment-completed", getPaymentComplete);
 router.get("/test", testMail);
+
+
 module.exports = router;

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Checkout | Simbtech</title>
+</head>
+<body>
+    <header>
+        <div class="page-logo">
+            <img src="assets/simbtech_logo.png" alt="Api logo">
+            <h3>Simbtech</h3>
+        </div>
+    </header>
+    <main>
+        <div class="paiement">
+            <div class="left">
+                <img src="assets/icons/smartphone.png" alt="Paiement type">
+                <h5>&nbsp; Paiement Mobile</h5>
+            </div>
+            <div class="right">
+                <button>Annuler</button>
+            </div>
+        </div>
+        <div class="amount">
+            <div class="amount-left">
+                <img src="assets/icons/currency.png" alt="Dollar sign">
+            </div>
+            <div class="amount-right">
+                <h5><sup class="currency">XAF</sup>15000</h5>
+                <div class="username"><h4>test@gmail.com</h4></div>
+                </div>
+        </div>
+        <div class="information-text">
+            <h5>Veuillez entrer les details de votre paiement pour effectuer le paiement</h5>
+        </div>
+        <div class="information-filling">
+            <div class="country">
+                <label for="country">Choisir le pays:</label>
+                <div class="country-flag"> <select name="country" id="country">
+                    <option value="country" class="country-option">Cameroun</option>
+                    <option value="country" class="country-option">Cote d'ivoire</option>
+
+                </select></div>
+                
+            </div>
+            <div class="network">
+                <label for="network">Choisir le reseau: </label>
+                <select name="network" id="network" class="network-type">
+                    <div class="network-type">
+                        <option value="network-type" class="network-type">Orange Money</option>
+                        <option value="network-type" class="network-type">MTN MOMO</option>
+                        <option value="network-type" class="network-type">Express Union</option>
+
+                    </div>
+                </select>
+            </div>
+            <div class="phone-number">
+                <label for="phone-number">Numero de telephone:</label>
+                <div class="phone-icon">
+                    <img src="assets/icons/iphone.png" alt="">
+                    <input type="text" name="phone-number" id="phone-number" placeholder="Numero de telephone">
+                </div>
+                
+            </div>
+        </div>
+        <div class="confirmation-button">
+            <button class="Btn">
+                Confirmer le paiement
+                <svg class="svgIcon" viewBox="0 0 576 512"><path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path></svg>
+              </button>
+        </div>
+    </main>
+    
+</body>
+<script src="main.js"></script>
+</html>

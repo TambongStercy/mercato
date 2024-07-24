@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/user-routes.js");
 const adminRoutes = require("./routes/admin-routes.js")
+const payRoute = require("./routes/payment_routes.js")
 
 const app = express();
 const port = 3000;
@@ -23,6 +24,7 @@ db.once("open", () => {
 });
 
 app.use("/", userRoutes);
+app.use("/pay", payRoute);
 app.use("/admin", adminRoutes)
 app.use(cookieParser());
 // Parse JSON bodies for this router
